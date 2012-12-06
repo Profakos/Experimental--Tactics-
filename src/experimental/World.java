@@ -22,10 +22,42 @@ public class World{
     tagtest = new TagteamUnit();
     }
 
+    /*
+     * Draw the world
+     */
     public void draw(Graphics g, Viewport v) {
         
-        getTmap().draw(g, v);
-        tagtest.draw(g, v);
+        
+        /*
+         * draw the scenery
+         */
+         getTmap().draw(g, v);
+         
+         /*
+          * draw the characters
+          */
+         tagtest.draw(g, v);
+        
+        
+        
+          /*
+           * Draws the cursor if it is not offscreen
+           */
+     if(v.getCx()!=-1 && v.getCy()!=-1 )  
+     {
+           try{
+          int cx = v.getCx()/v.getTileSize();
+          int cy = v.getCy()/v.getTileSize();  
+          
+         g.translate(cx*v.getTileSize(), cy*v.getTileSize());
+         g.drawImage(ImageRegistry.getImage("cursor"),0, 0, v.getTileSize(), v.getTileSize(), null);
+         g.translate(-cx*v.getTileSize(), -cy*v.getTileSize());
+         
+            }catch(NullPointerException e){}
+     }  
+      
+    
+    
     }
 
     void update() { 

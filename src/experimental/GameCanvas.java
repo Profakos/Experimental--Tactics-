@@ -56,29 +56,12 @@ public class GameCanvas extends Canvas{
       */
      world.draw(g, v);
      
-     
-       
-          /*
-           * Draws the cursor
-           */
-     if(curx==-1 || cury==-1) return;
-     
-           try{
-          int cx = curx/v.getTileSize();
-          int cy = cury/v.getTileSize();  
-        
-          
-          g.translate(cx*v.getTileSize(), cy*v.getTileSize());
-           g.drawImage(ImageRegistry.getImage("cursor"),0, 0, v.getTileSize(), v.getTileSize(), this);
-          g.translate(-cx*v.getTileSize(), -cy*v.getTileSize());
-   
-      }catch(NullPointerException e){}
-     
+      
      
     };
     
-    void setCurx(int i){curx = i;}
-    void setCury(int i){cury = i;}
+    void setCurx(int i){v.setCx(i);}
+    void setCury(int i){v.setCy(i);}
   
     
 }

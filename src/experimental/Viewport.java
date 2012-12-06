@@ -17,6 +17,9 @@ public class Viewport{
     private int offY = 0;
     private int offX = 0;
     private int curZ = 0;
+    
+    private int cx = 0;
+    private int cy = 0;
 
     /**
      * @return the widthInTiles
@@ -100,5 +103,33 @@ public class Viewport{
      */
     public void setCurZ(int curZ) {
         this.curZ = curZ;
+    }
+
+    /**
+     * @return the cx
+     */
+    public int getCx() {
+        return cx;
+    }
+
+    /**
+     * @param cx the cx to set
+     */
+    public void setCx(int cx) {
+        this.cx = cx;
+    }
+
+    /**
+     * @return the cy
+     */
+    public int getCy() {
+        return cy;
+    }
+
+    /**
+     * @param cy the cy to set
+     */
+    public void setCy(int cy) {
+        this.cy = cy;
     }
 }

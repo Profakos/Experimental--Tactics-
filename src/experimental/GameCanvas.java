@@ -15,14 +15,14 @@ import java.awt.Image;
  */
 public class GameCanvas extends Canvas{
    
-    Viewport v;
-    World world;
+    private Viewport v;
+    private WorldScreen world;
     
     int curx = 0;
     int cury = 0;
     
      
-    GameCanvas(World world)
+    GameCanvas(WorldScreen world)
       {
       this.world = world;
       this.setBackground(Color.black); 
@@ -54,14 +54,42 @@ public class GameCanvas extends Canvas{
      /*
       * Draws the world
       */
-     world.draw(g, v);
+        getWorld().draw(g, getV());
      
       
      
     };
     
-    void setCurx(int i){v.setCx(i);}
-    void setCury(int i){v.setCy(i);}
+    void setCurx(int i){getV().setCx(i);}
+    void setCury(int i){getV().setCy(i);}
+
+    /**
+     * @return the v
+     */
+    public Viewport getV() {
+        return v;
+    }
+
+    /**
+     * @param v the v to set
+     */
+    public void setV(Viewport v) {
+        this.v = v;
+    }
+
+    /**
+     * @return the world
+     */
+    public WorldScreen getWorld() {
+        return world;
+    }
+
+    /**
+     * @param world the world to set
+     */
+    public void setWorld(WorldScreen world) {
+        this.world = world;
+    }
   
     
 }

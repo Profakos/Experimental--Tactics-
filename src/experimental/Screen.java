@@ -10,12 +10,10 @@ import java.awt.Graphics;
  *
  * @author Akos
  */
-public interface Unit {
+public interface Screen {
+    public void draw(Graphics g, Viewport v);
     
-    void draw(Graphics g, Viewport v);
+    public void update();
     
-    /*
-     * For units that have alternate forms
-     */
-    void transformToAlternate();
+    public void screenClick(Viewport v);
 }

@@ -20,9 +20,7 @@ public class ChangingCharacter {
     
     void drawChanger(Graphics g, Viewport v, int state)
     {
-       
      g.drawImage(ImageRegistry.getImage(name + "_Char"), 0, 0, 50, 50, state*v.getTileSize(), 0, (state+1)*v.getTileSize(), 50, null);
-    
     }
     
 }

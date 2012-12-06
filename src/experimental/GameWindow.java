@@ -47,14 +47,14 @@ class GameWindow extends Frame {
     /**
      * @return the world
      */
-    public World getWorld() {
+    public WorldScreen getWorld() {
         return world;
     }
 
     /**
      * @param world the world to set
      */
-    public void setWorld(World world) {
+    public void setWorld(WorldScreen world) {
         this.world = world;
     }
 
@@ -78,9 +78,9 @@ class GameWindow extends Frame {
      
         @Override
            public void windowClosing(WindowEvent e) { 
-            getTimer1().stop();
-         Window ee = e.getWindow(); 
-         ee.dispose();
+           getTimer1().stop();
+           Window ee = e.getWindow(); 
+           ee.dispose();
          }
         
     
@@ -91,7 +91,18 @@ class GameWindow extends Frame {
 
         @Override
         public void mousePressed(MouseEvent e) {
-            world.changeTagteamTemp();
+            
+              if(getCanvas().getMousePosition()!=null)
+        {
+            getCanvas().setCurx(getCanvas().getMousePosition().x);
+            getCanvas().setCury(getCanvas().getMousePosition().y);
+        } 
+     else
+     {
+            getCanvas().setCurx(-1);
+            getCanvas().setCury(-1);
+     }
+            world.screenClick(canvas.getV());
            
             } 
               
@@ -114,7 +125,7 @@ class GameWindow extends Frame {
     private ImageRegistry images;
     
     private GameCanvas canvas;
-    private World world;
+    private WorldScreen world;
     
     private Timer timer1;
     
@@ -149,7 +160,7 @@ class GameWindow extends Frame {
     
     private void init()
     { 
-        setWorld(new World());
+        setWorld(new WorldScreen());
         setImages(new ImageRegistry());
         setTimer1(new Timer(100, new TimerListener()));  
     }

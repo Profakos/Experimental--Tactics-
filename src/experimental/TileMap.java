@@ -4,7 +4,6 @@
  */
 package experimental;
 
-import java.awt.Color;
 import java.awt.Graphics;
 import java.util.ArrayList;
 import java.util.List;
@@ -59,18 +58,9 @@ public class TileMap{
               }catch(Exception e){  }
               g.translate(-j*50, -i*50);  
             } 
-            
-            
-        
+             
         }
-        /*
-         * Draws the menu
-         */
-        g.setColor(Color.gray);
-        g.fillRect(0, v.getTileSize()*(v.getHeightInTiles()-2), v.getTileSize()*v.getWidthInTiles(), v.getTileSize()*2);
-        g.setColor(Color.black);
-        g.drawRect(0, v.getTileSize()*(v.getHeightInTiles()-2), v.getTileSize()*v.getWidthInTiles(), v.getTileSize()*2);
-        
+       
         
     }
 

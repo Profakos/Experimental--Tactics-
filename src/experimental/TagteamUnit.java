@@ -93,4 +93,14 @@ public class TagteamUnit implements Unit {
     public void setCurrentDominant(int currentDominant) {
         this.currentDominant = currentDominant;
     }
+
+    @Override
+    public void transformToAlternate() {
+         if(getCurrentDominant()==0)
+        {
+        setCurrentDominant(1);
+        }
+        else
+        setCurrentDominant(0);
+    }
 }

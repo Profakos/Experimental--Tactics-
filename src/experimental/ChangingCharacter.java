@@ -20,16 +20,8 @@ public class ChangingCharacter {
     
     void drawChanger(Graphics g, Viewport v, int state)
     {
-       String drawname = name; 
-    if(state == 0)
-        {
-         drawname += "_Human";
-        }
-        else
-        {
-       drawname += "_Weapon";
-        }
-     g.drawImage(ImageRegistry.getImage(drawname), 50, 50, null);
+       
+     g.drawImage(ImageRegistry.getImage(name + "_Char"), 0, 0, 50, 50, state*v.getTileSize(), 0, (state+1)*v.getTileSize(), 50, null);
     
     }
     

@@ -21,6 +21,7 @@ public class GameCanvas extends Canvas{
     int curx = 0;
     int cury = 0;
     
+    
      
     GameCanvas(WorldScreen world)
       {

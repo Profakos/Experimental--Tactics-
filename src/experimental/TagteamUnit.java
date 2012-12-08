@@ -12,18 +12,24 @@ import java.awt.Graphics;
  */
 public class TagteamUnit implements Unit {
      
+    private int locationY;
+    private int locationX;
     
     private ChangingCharacter char0;
     private ChangingCharacter char1;
     
     private int currentDominant;
     
-    TagteamUnit()
+    TagteamUnit(String ch0, String ch1, int y, int x)
     {
-    char0 = new ChangingCharacter("blood");
-    char1 = new ChangingCharacter("ghost");
+    char0 = new ChangingCharacter(ch0);
+    char1 = new ChangingCharacter(ch1);
     
     currentDominant = 1;
+
+    locationY = y;
+    locationX = x;
+    
     }
 
     /*
@@ -48,8 +54,10 @@ public class TagteamUnit implements Unit {
     
     public void drawTeam(Graphics g, Viewport v, ChangingCharacter wielder, ChangingCharacter weapon)
     { 
+      g.translate(v.getTileSize()*locationX, v.getTileSize()*locationY);
       wielder.drawChanger(g, v, 0);
       weapon.drawChanger(g, v, 1); 
+      g.translate(-v.getTileSize()*locationX, -v.getTileSize()*locationY);
     }
 
     /**
@@ -102,5 +110,33 @@ public class TagteamUnit implements Unit {
         }
         else
         setCurrentDominant(0);
+    }
+
+    /**
+     * @return the locationY
+     */
+    public int getLocationY() {
+        return locationY;
+    }
+
+    /**
+     * @param locationY the locationY to set
+     */
+    public void setLocationY(int locationY) {
+        this.locationY = locationY;
+    }
+
+    /**
+     * @return the locationX
+     */
+    public int getLocationX() {
+        return locationX;
+    }
+
+    /**
+     * @param locationX the locationX to set
+     */
+    public void setLocationX(int locationX) {
+        this.locationX = locationX;
     }
 }

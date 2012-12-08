@@ -15,12 +15,15 @@ public class WorldScreen implements Screen{
     
     private TileMap tmap;
     
-    TagteamUnit tagtest;
+    
+    private UnitGroup playerCharGroup;
+    
+   
     
     WorldScreen()
     {
-    tmap = new TileMap(13,11); 
-    tagtest = new TagteamUnit();
+    tmap = new TileMap(13,11);  
+    playerCharGroup = new UnitGroup();
     }
 
     /*
@@ -38,7 +41,8 @@ public class WorldScreen implements Screen{
          /*
           * draw the characters
           */
-         tagtest.draw(g, v);
+         
+        getPlayerCharGroup().draw(g, v);
              
            /*
             * Draws the menu
@@ -101,16 +105,37 @@ public class WorldScreen implements Screen{
          if(v.getCx()!=-1 && v.getCy()!=-1 )  
      {
            try{
+          int cy = v.getCy()/v.getTileSize();  
           int cx = v.getCx()/v.getTileSize();
-          int cy = v.getCy()/v.getTileSize(); 
           
-          if(cy>=tmap.getHeightInTiles())
+          /*
+           * if(clickedonmap)
+           * 
+           * else clicked on menu
+           */
+          if(cy<tmap.getHeightInTiles())
+          {
+          
+              /*
+               * This needs to go into its own method
+               */
+                    playerCharGroup.getCurrentSelected().setLocationY(cy + v.getOffY());
+                    playerCharGroup.getCurrentSelected().setLocationX(cx + v.getOffX());
+              
+          }
+          else
           { 
+              /*
+               * Menuhandling should go to its own method
+               */
             switch(cx){
-                case (2): tagtest.transformToAlternate(); break;
+                case (0): playerCharGroup.prevnextChar(-1); break;
+                case (1): playerCharGroup.prevnextChar(1); break;
+                case (2): playerCharGroup.getCurrentSelected().transformToAlternate(); break;
                 default: break;
             } 
           }
+          
               }catch(NullPointerException e){}
          
      }  
@@ -120,6 +145,20 @@ public class WorldScreen implements Screen{
     @Override
     public void update() {
       //  throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    /**
+     * @return the playerCharGroup
+     */
+    public UnitGroup getPlayerCharGroup() {
+        return playerCharGroup;
+    }
+
+    /**
+     * @param playerCharGroup the playerCharGroup to set
+     */
+    public void setPlayerCharGroup(UnitGroup playerCharGroup) {
+        this.playerCharGroup = playerCharGroup;
     }
     
     

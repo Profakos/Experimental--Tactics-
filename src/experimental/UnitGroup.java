@@ -43,13 +43,19 @@ public class UnitGroup {
     }
 
  
-    void prevnextChar(int dir)
+    void prevnextUnit(int dir)
     {
    
     current  = (current + dir);
     
     if(current<0) current = units.size()-1;
     else current %= units.size();
+    }
+
+    void moveUnit(int y, int x) {
+         
+        getCurrentSelected().moveUnit(y, x);
+        
     }
     
 }

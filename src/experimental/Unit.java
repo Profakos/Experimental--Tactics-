@@ -18,4 +18,6 @@ public interface Unit {
      * For units that have alternate forms
      */
     void transformToAlternate();
+    
+    void moveUnit(int y, int x);
 }

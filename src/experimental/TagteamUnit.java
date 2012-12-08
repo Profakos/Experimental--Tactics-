@@ -54,7 +54,8 @@ public class TagteamUnit implements Unit {
     
     public void drawTeam(Graphics g, Viewport v, ChangingCharacter wielder, ChangingCharacter weapon)
     { 
-      g.translate(v.getTileSize()*locationX, v.getTileSize()*locationY);
+         
+      g.translate(v.getTileSize()*locationX, v.getTileSize()*locationY);  
       wielder.drawChanger(g, v, 0);
       weapon.drawChanger(g, v, 1); 
       g.translate(-v.getTileSize()*locationX, -v.getTileSize()*locationY);
@@ -138,5 +139,15 @@ public class TagteamUnit implements Unit {
      */
     public void setLocationX(int locationX) {
         this.locationX = locationX;
+    }
+
+    @Override
+    public void moveUnit(int y, int x) {
+        
+        if( (Math.abs(y-this.locationY)+Math.abs(x-this.locationX))<6)
+        {
+         setLocationY(y);
+         setLocationX(x);
+        }
     }
 }

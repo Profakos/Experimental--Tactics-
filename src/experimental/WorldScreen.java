@@ -32,15 +32,30 @@ public class WorldScreen implements Screen{
     @Override
     public void draw(Graphics g, Viewport v) {
         
-        
+         
         /*
          * draw the scenery
          */
-         getTmap().draw(g, v);
+        getTmap().draw(g, v);
          
          /*
           * draw the characters
           */
+        
+        int curx = getPlayerCharGroup().getCurrentSelected().getLocationX();
+        int cury = getPlayerCharGroup().getCurrentSelected().getLocationY();
+        
+        for(int ii = -3; ii<4; ii++)
+        {
+            for(int jj = -3; jj<4; jj++)
+            { 
+             if(Math.abs(jj)+Math.abs(ii)>=6) continue;   
+                
+             if(curx+ii>=0 && cury+jj>=0 && curx+ii<v.getWidthInTiles() && cury+jj<v.getHeightInTiles()-2)
+        g.drawImage(ImageRegistry.getImage("move_highlight"), (curx+ii)*v.getTileSize(), (cury+jj)*v.getTileSize(), null); 
+            }
+        }
+        
          
         getPlayerCharGroup().draw(g, v);
              
@@ -52,7 +67,7 @@ public class WorldScreen implements Screen{
         g.fillRect(0, v.getTileSize()*(v.getHeightInTiles()-2), v.getTileSize()*v.getWidthInTiles(), v.getTileSize()*2);
         g.setColor(Color.black);
         g.drawRect(0, v.getTileSize()*(v.getHeightInTiles()-2), v.getTileSize()*v.getWidthInTiles(), v.getTileSize()*2);
-           
+        
         /*
          * Draws the menu icons
          */
@@ -119,8 +134,10 @@ public class WorldScreen implements Screen{
               /*
                * This needs to go into its own method
                */
-                    playerCharGroup.getCurrentSelected().setLocationY(cy + v.getOffY());
-                    playerCharGroup.getCurrentSelected().setLocationX(cx + v.getOffX());
+              
+                playerCharGroup.moveUnit(cy + v.getOffY(), cx + v.getOffX());
+               
+                
               
           }
           else
@@ -129,8 +146,8 @@ public class WorldScreen implements Screen{
                * Menuhandling should go to its own method
                */
             switch(cx){
-                case (0): playerCharGroup.prevnextChar(-1); break;
-                case (1): playerCharGroup.prevnextChar(1); break;
+                case (0): playerCharGroup.prevnextUnit(-1); break;
+                case (1): playerCharGroup.prevnextUnit(1); break;
                 case (2): playerCharGroup.getCurrentSelected().transformToAlternate(); break;
                 default: break;
             } 

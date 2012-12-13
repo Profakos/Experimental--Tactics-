@@ -15,12 +15,15 @@ public abstract class Unit {
     private String name;
     private int locationY;
     private int locationX;
+    private int tileSpeed;
     
     Unit(String name, int lY, int lX)
     {
     this.name = name;
     this.locationY = lY;
     this.locationX = lX;
+    
+    this.tileSpeed = 3;
     }
     
     /*
@@ -65,12 +68,19 @@ public abstract class Unit {
      return true;  
     }
     
-    
-    
+     
     /*
      * For units that have alternate forms
      */
     abstract void transformToAlternate();
+    
+    /*
+     * The Distance it can move in tiles, modified by effects
+     */
+    int getModifiedTileSpeed()
+    {
+    return 0;
+    };
     
     
     /**
@@ -113,5 +123,19 @@ public abstract class Unit {
      */
     public void setLocationX(int locationX) {
         this.locationX = locationX;
+    }
+
+    /**
+     * @return the moveSpeed
+     */
+    public int getTileSpeed() {
+        return tileSpeed;
+    }
+
+    /**
+     * @param moveSpeed the moveSpeed to set
+     */
+    public void setTileSpeed(int moveSpeed) {
+        this.tileSpeed = moveSpeed;
     }
 }

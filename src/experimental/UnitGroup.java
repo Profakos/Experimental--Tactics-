@@ -31,8 +31,8 @@ public class UnitGroup {
 
     void draw(Graphics g, Viewport v) {
         
-         g.drawImage(ImageRegistry.getImage("selectedChar"), getUnits().get(getCurrent()).getLocationX()*v.getTileSize()
-           , getUnits().get(getCurrent()).getLocationY()*v.getTileSize(), null);
+         g.drawImage(ImageRegistry.getImage("selectedChar"), (getUnits().get(getCurrent()).getLocationX()-v.getOffX())*v.getTileSize()
+           , (getUnits().get(getCurrent()).getLocationY()-v.getOffY())*v.getTileSize(), null);
          
          
         for(int index = 0; index<getUnits().size(); index++)

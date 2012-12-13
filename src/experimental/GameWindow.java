@@ -108,6 +108,29 @@ class GameWindow extends Frame {
               
     }
    
+    class MyKeyListener extends KeyAdapter
+            {
+        @Override
+        public void keyPressed(KeyEvent e) {
+            switch(e.getKeyCode())
+            {
+                case KeyEvent.VK_W:
+                case KeyEvent.VK_UP: canvas.getV().scroll(Directions.N); break;
+                case KeyEvent.VK_S:    
+                case KeyEvent.VK_DOWN: canvas.getV().scroll(Directions.S);  break;
+                case KeyEvent.VK_A:    
+                case KeyEvent.VK_LEFT: canvas.getV().scroll(Directions.W); break;
+                case KeyEvent.VK_D:    
+                case KeyEvent.VK_RIGHT: canvas.getV().scroll(Directions.E); break;
+                default: break;
+            }
+            canvas.repaint();
+           // throw new UnsupportedOperationException("Not supported yet.");
+        } 
+            
+    }
+     
+     
          class TimerListener implements ActionListener
     {
 
@@ -138,15 +161,18 @@ class GameWindow extends Frame {
          this.addWindowListener(new MainWindowAdapter());
          
             gamepanel = new Panel();
+            gamepanel.setFocusable(false);
             
             canvas = new GameCanvas(world);
             canvas.setSize(650, 650);
-        
+            canvas.setFocusable(true);
+            
             gamepanel.add(canvas);
             
             this.add(gamepanel);
             
             canvas.addMouseListener(new MyMouseListener());
+            canvas.addKeyListener(new MyKeyListener());
             
             this.setBounds(100, 20, 650, 650);
             
@@ -158,6 +184,7 @@ class GameWindow extends Frame {
     
     }
     
+    //initializes things
     private void init()
     { 
         setWorld(new WorldScreen());
@@ -167,9 +194,14 @@ class GameWindow extends Frame {
     
     void run(){ getTimer1().start();}
     
+    
+    /*
+     * Updates the world, redraws the screen
+     */
     void update()
     {
-        getWorld().update();
+        
+//        getWorld().update();
         
         
      if(getCanvas().getMousePosition()!=null)

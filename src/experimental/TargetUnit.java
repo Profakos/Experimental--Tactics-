@@ -22,9 +22,9 @@ public class TargetUnit extends Unit {
     @Override
     public void draw(Graphics g, Viewport v) {
        
-         g.translate(v.getTileSize()*getLocationX(), v.getTileSize()*getLocationY());   
+         g.translate(v.getTileSize()*(getLocationX()-v.getOffX()), v.getTileSize()*(getLocationY()-v.getOffY()));   
          g.drawImage(ImageRegistry.getImage("targetPlaceholder"), 0, 0, null);
-         g.translate(-v.getTileSize()*getLocationX(), -v.getTileSize()*getLocationY());
+         g.translate(-v.getTileSize()*(getLocationX()-v.getOffX()), -v.getTileSize()*(getLocationY()-v.getOffY()));   
     }
 
     @Override
@@ -35,7 +35,6 @@ public class TargetUnit extends Unit {
     @Override
     public void moveUnit(int y, int x, WorldScreen w) {
          
-       
         if(w.getTmap().getTile(y, x).isOccupied()) return;
         w.getTmap().getTile( getLocationY(), getLocationX()).setOccupiedPerson(false, "");
        
@@ -47,5 +46,7 @@ public class TargetUnit extends Unit {
         
         w.getTmap().getTile( getLocationY(), getLocationX()).setOccupiedPerson(true, getName());
      }
+
+    
     
 }

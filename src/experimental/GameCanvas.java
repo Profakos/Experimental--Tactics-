@@ -17,17 +17,18 @@ public class GameCanvas extends Canvas{
    
     private Viewport v;
     private WorldScreen world;
-    
-    int curx = 0;
-    int cury = 0;
-    
+  
     
      
     GameCanvas(WorldScreen world)
       {
       this.world = world;
       this.setBackground(Color.black); 
+      
       this.v = new Viewport();
+      v.setTileMaxX(world.getTmap().getWidthInTiles());
+      v.setTileMaxY(world.getTmap().getHeightInTiles());
+      
       }
     
     

@@ -40,10 +40,10 @@ public class TagteamUnit extends Unit{
     @Override
     public void draw(Graphics g, Viewport v) { 
         
-        g.translate(v.getTileSize()*getLocationX(), v.getTileSize()*getLocationY());  
+      g.translate(v.getTileSize()*(getLocationX()-v.getOffX()), v.getTileSize()*(getLocationY()-v.getOffY()));   
       characters[currentDominant].drawChanger(g, v, 0);
       characters[(currentDominant+1)%2].drawChanger(g, v, 1); 
-      g.translate(-v.getTileSize()*getLocationX(), -v.getTileSize()*getLocationY()); 
+      g.translate(-v.getTileSize()*(getLocationX()-v.getOffX()), -v.getTileSize()*(getLocationY()-v.getOffY()));  
     }
     
      
@@ -59,6 +59,9 @@ public class TagteamUnit extends Unit{
         }
         else
         setCurrentDominant(0);
+         
+         
+        
     }
 
    
@@ -74,7 +77,8 @@ public class TagteamUnit extends Unit{
          * Can only move 4 tiles
          * TODO: makes this based on a speed stat
          */
-         if( (Math.abs(y-this.getLocationY())+Math.abs(x-this.getLocationX()))<4)
+         if( (Math.abs(y-this.getLocationY())+Math.abs(x-this.getLocationX()))<=
+                 getModifiedTileSpeed())
         {
          setLocationY(y);
          setLocationX(x);
@@ -97,10 +101,10 @@ public class TagteamUnit extends Unit{
     }
  
     
-    
-    
-     
-  
+    @Override
+     int getModifiedTileSpeed(){
+       return this.getTileSpeed()+characters[(currentDominant+1)%2].getBonusTileSpeed();
+    }
 
     /**
      * @return the currentDominant
@@ -116,5 +120,6 @@ public class TagteamUnit extends Unit{
         this.currentDominant = currentDominant;
     }
 
+    
   
 }

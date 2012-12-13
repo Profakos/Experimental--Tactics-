@@ -15,9 +15,14 @@ public class ChangingCharacter {
     private String name;
     private boolean ranged;
     
+    
+    private int bonusTileSpeed;
+    
     ChangingCharacter(String name, boolean ranged) {
        this.name = name;
        this.ranged = ranged;
+       
+       bonusTileSpeed  = ranged ? 0 : 1;
     }
     
     void drawChanger(Graphics g, Viewport v, int state)
@@ -51,6 +56,20 @@ public class ChangingCharacter {
      */
     public void setRanged(boolean ranged) {
         this.ranged = ranged;
+    }
+
+    /**
+     * @return the bonusMoveSpeed
+     */
+    public int getBonusTileSpeed() {
+        return bonusTileSpeed;
+    }
+
+    /**
+     * @param bonusMoveSpeed the bonusMoveSpeed to set
+     */
+    public void setBonusTileSpeed(int bonusTileSpeed) {
+        this.bonusTileSpeed = bonusTileSpeed;
     }
 
   

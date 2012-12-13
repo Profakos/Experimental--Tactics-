@@ -15,12 +15,8 @@ import java.util.Random;
 public class WorldScreen implements Screen{
     
     private TileMap tmap;
-    
-    
     private UnitGroup playerCharGroup;
-    
     private  TargetUnit target;
-    
     private Random rgen;
     
    /*
@@ -32,7 +28,7 @@ public class WorldScreen implements Screen{
     
     rgen = new Random();
         
-    tmap = new TileMap(13,11);  
+    tmap = new TileMap(15,15);  
     playerCharGroup = new UnitGroup();
     
     for(int index = 0; index<playerCharGroup.getUnits().size(); index++)
@@ -65,14 +61,15 @@ public class WorldScreen implements Screen{
         int curx = getPlayerCharGroup().getCurrentSelected().getLocationX();
         int cury = getPlayerCharGroup().getCurrentSelected().getLocationY();
         
-        for(int ii = -3; ii<4; ii++)
+        int dist =  getPlayerCharGroup().getCurrentSelected().getModifiedTileSpeed();
+        
+        for(int ii = -dist; ii<dist+1; ii++)
         {
-            for(int jj = -3; jj<4; jj++)
+            for(int jj = -dist; jj<dist+1; jj++)
             { 
-             if(Math.abs(jj)+Math.abs(ii)>3) continue;   
+             if(Math.abs(jj)+Math.abs(ii)>dist) continue;   
                 
-             if(curx+ii>=0 && cury+jj>=0 && curx+ii<v.getWidthInTiles() && cury+jj<v.getHeightInTiles()-2)
-        g.drawImage(ImageRegistry.getImage("move_highlight"), (curx+ii)*v.getTileSize(), (cury+jj)*v.getTileSize(), null); 
+          g.drawImage(ImageRegistry.getImage("move_highlight"), (curx+ii-v.getOffX())*v.getTileSize(), (cury+jj-v.getOffY())*v.getTileSize(), null); 
             }
         }
         
@@ -137,7 +134,7 @@ public class WorldScreen implements Screen{
            * 
            * else clicked on menu
            */
-          if(cy<tmap.getHeightInTiles())
+          if(cy<v.getHeightInTiles()-2)
           {
           
               /*

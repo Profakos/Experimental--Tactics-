@@ -35,9 +35,15 @@ public class TileMap{
     
     public Tile getTile(int y, int x)
     {
-   
+        try
+        {
     return getTiles().get(x+this.getWidthInTiles()*y);
-    
+        }
+        catch(Exception e){  
+            System.out.println("Y" + y + ",X" + x+") tile returned with a null");
+            return null;
+        }
+        
     }
     
     
@@ -54,9 +60,9 @@ public class TileMap{
                 
               g.translate(j*50, i*50);  
               try{
-              getTile(i, j).draw(g, v.getTileSize());   
+              getTile(i+v.getOffY(), j+v.getOffX()).draw(g, v.getTileSize());   
               }catch(Exception e){  }
-              g.translate(-j*50, -i*50);  
+              g.translate(j*-50, i*-50); 
             } 
              
         }

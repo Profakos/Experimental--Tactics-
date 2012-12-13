@@ -21,6 +21,32 @@ public class Viewport{
     private int cx = 0;
     private int cy = 0;
 
+    private int tileMaxY;
+    private int tileMaxX;
+    
+    
+    /*
+     * Scrolling
+     */
+    void scroll(Directions directions) {
+         switch(directions)
+        {
+        case N: this.offY = offY-1; break;
+        case S: this.offY = offY+1; break;
+        case E: this.offX = offX+1; break;
+        case W: this.offX = offX-1; break;
+        }
+    if(this.offY<0) offY=0;
+    if(this.offX<0) offX = 0;
+     
+    if(widthInTiles+offX>tileMaxX) 
+    {offX-=1;}
+    if(heightInTiles-2+offY>tileMaxY) 
+    {offY-=1;}
+    }
+    
+    
+    
     /**
      * @return the widthInTiles
      */
@@ -132,4 +158,34 @@ public class Viewport{
     public void setCy(int cy) {
         this.cy = cy;
     }
+
+    /**
+     * @return the tileMaxY
+     */
+    public int getTileMaxY() {
+        return tileMaxY;
+    }
+
+    /**
+     * @param tileMaxY the tileMaxY to set
+     */
+    public void setTileMaxY(int tileMaxY) {
+        this.tileMaxY = tileMaxY;
+    }
+
+    /**
+     * @return the tileMaxX
+     */
+    public int getTileMaxX() {
+        return tileMaxX;
+    }
+
+    /**
+     * @param tileMaxX the tileMaxX to set
+     */
+    public void setTileMaxX(int tileMaxX) {
+        this.tileMaxX = tileMaxX;
+    }
+
+    
 }

@@ -17,27 +17,27 @@ public class UnitGroup {
     
     private List<TagteamUnit> units;
     
-    int current = 0; 
+    private int current = 0; 
     
     UnitGroup()
     {
     units = new ArrayList<>();    
-    units.add(new TagteamUnit("sound", "clean", 0, 0));
-    units.add(new TagteamUnit("tech", "water", 0, 1));
-    units.add(new TagteamUnit("blood", "ghost", 0, 2));
+    units.add(new TagteamUnit("alpha", "sound", false, "clean", false, 0, 0));
+    units.add(new TagteamUnit("beta", "tech", true, "water", true, 0, 1));
+    units.add(new TagteamUnit("gamma","blood", false, "ghost", true, 0, 2));
     }
     
-    TagteamUnit getCurrentSelected(){  return units.get(current); }
+    TagteamUnit getCurrentSelected(){  return getUnits().get(getCurrent()); }
 
     void draw(Graphics g, Viewport v) {
         
-         g.drawImage(ImageRegistry.getImage("selectedChar"), units.get(current).getLocationX()*v.getTileSize()
-           , units.get(current).getLocationY()*v.getTileSize(), null);
+         g.drawImage(ImageRegistry.getImage("selectedChar"), getUnits().get(getCurrent()).getLocationX()*v.getTileSize()
+           , getUnits().get(getCurrent()).getLocationY()*v.getTileSize(), null);
          
          
-        for(int index = 0; index<units.size(); index++)
+        for(int index = 0; index<getUnits().size(); index++)
         {
-        units.get(index).draw(g, v);
+            getUnits().get(index).draw(g, v);
         }
           
     }
@@ -46,16 +46,46 @@ public class UnitGroup {
     void prevnextUnit(int dir)
     {
    
-    current  = (current + dir);
+        setCurrent(getCurrent() + dir);
     
-    if(current<0) current = units.size()-1;
-    else current %= units.size();
+    if( getCurrent()<0) setCurrent(getUnits().size() - 1);
+    else setCurrent(getCurrent() % getUnits().size());
     }
 
-    void moveUnit(int y, int x) {
-         
-        getCurrentSelected().moveUnit(y, x);
-        
+    /*
+     * Moves the currently selected Unit
+     */
+    void moveUnit(int y, int x, WorldScreen w) {
+          
+        getCurrentSelected().moveUnit(y, x, w); 
+    }
+
+    /**
+     * @return the units
+     */
+    public List<TagteamUnit> getUnits() {
+        return units;
+    }
+
+    /**
+     * @param units the units to set
+     */
+    public void setUnits(List<TagteamUnit> units) {
+        this.units = units;
+    }
+
+    /**
+     * @return the current
+     */
+    public int getCurrent() {
+        return current;
+    }
+
+    /**
+     * @param current the current to set
+     */
+    public void setCurrent(int current) {
+        this.current = current;
     }
     
 }

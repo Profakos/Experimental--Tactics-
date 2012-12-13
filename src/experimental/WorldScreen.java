@@ -6,6 +6,7 @@ package experimental;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.util.Random;
 
 /**
  *
@@ -18,12 +19,32 @@ public class WorldScreen implements Screen{
     
     private UnitGroup playerCharGroup;
     
-   
+    private  TargetUnit target;
+    
+    private Random rgen;
+    
+   /*
+    * Constructor
+    */
     
     WorldScreen()
     {
+    
+    rgen = new Random();
+        
     tmap = new TileMap(13,11);  
     playerCharGroup = new UnitGroup();
+    
+    for(int index = 0; index<playerCharGroup.getUnits().size(); index++)
+    {
+        tmap.getTile(playerCharGroup.getUnits().get(index).getLocationY(), 
+        playerCharGroup.getUnits().get(index).getLocationX()).setOccupiedPerson(true,
+        playerCharGroup.getUnits().get(index).getName());
+    }
+    
+    target = new TargetUnit("target", 5, 5);
+    tmap.getTile(5,5).setOccupiedPerson(true, "target");
+    
     }
 
     /*
@@ -31,8 +52,7 @@ public class WorldScreen implements Screen{
      */
     @Override
     public void draw(Graphics g, Viewport v) {
-        
-         
+          
         /*
          * draw the scenery
          */
@@ -49,7 +69,7 @@ public class WorldScreen implements Screen{
         {
             for(int jj = -3; jj<4; jj++)
             { 
-             if(Math.abs(jj)+Math.abs(ii)>=6) continue;   
+             if(Math.abs(jj)+Math.abs(ii)>3) continue;   
                 
              if(curx+ii>=0 && cury+jj>=0 && curx+ii<v.getWidthInTiles() && cury+jj<v.getHeightInTiles()-2)
         g.drawImage(ImageRegistry.getImage("move_highlight"), (curx+ii)*v.getTileSize(), (cury+jj)*v.getTileSize(), null); 
@@ -58,6 +78,8 @@ public class WorldScreen implements Screen{
         
          
         getPlayerCharGroup().draw(g, v);
+        
+        this.target.draw(g, v);
              
            /*
             * Draws the menu
@@ -94,24 +116,11 @@ public class WorldScreen implements Screen{
         
     }
 
-     
-
-    /**
-     * @return the tmap
-     */
-    public TileMap getTmap() {
-        return tmap;
-    }
-
-    /**
-     * @param tmap the tmap to set
-     */
-    public void setTmap(TileMap tmap) {
-        this.tmap = tmap;
-    }
-
+    
  /*
+  * 
   * Handles clicking on the screen
+  * 
   */
 
     @Override
@@ -133,10 +142,18 @@ public class WorldScreen implements Screen{
           
               /*
                * This needs to go into its own method
-               */
-              
-                playerCharGroup.moveUnit(cy + v.getOffY(), cx + v.getOffX());
-               
+               */ 
+              if(!tmap.getTile(cy + v.getOffY(), cx + v.getOffX()).isOccupied())
+              {
+                playerCharGroup.moveUnit(cy + v.getOffY(), cx + v.getOffX(), this);
+              }
+              else
+              {
+                if(tmap.getTile(cy + v.getOffY(), cx + v.getOffX()).getOccupName().equals(target.getName()))
+                 {
+                     if(playerCharGroup.getCurrentSelected().canHit(target, this)){  target.respawn(this);}  
+                 }
+              }
                 
               
           }
@@ -156,13 +173,19 @@ public class WorldScreen implements Screen{
               }catch(NullPointerException e){}
          
      }  
-       // changeTagteamTemp();
+        
     }
 
+    /*
+     * Updates the screen
+     */
     @Override
     public void update() {
       //  throw new UnsupportedOperationException("Not supported yet.");
     }
+    
+    
+    
 
     /**
      * @return the playerCharGroup
@@ -177,7 +200,35 @@ public class WorldScreen implements Screen{
     public void setPlayerCharGroup(UnitGroup playerCharGroup) {
         this.playerCharGroup = playerCharGroup;
     }
+
+    /**
+     * @return the rgen
+     */
+    public Random getRgen() {
+        return rgen;
+    }
+
+    /**
+     * @param rgen the rgen to set
+     */
+    public void setRgen(Random rgen) {
+        this.rgen = rgen;
+    }
     
     
+    
+    /**
+     * @return the tmap
+     */
+    public TileMap getTmap() {
+        return tmap;
+    }
+
+    /**
+     * @param tmap the tmap to set
+     */
+    public void setTmap(TileMap tmap) {
+        this.tmap = tmap;
+    }
 }
 

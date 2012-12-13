@@ -10,25 +10,27 @@ import java.awt.Graphics;
  *
  * @author Akos
  */
-public class TagteamUnit implements Unit {
+public class TagteamUnit extends Unit{
      
-    private int locationY;
-    private int locationX;
-    
-    private ChangingCharacter char0;
-    private ChangingCharacter char1;
+    private ChangingCharacter[] characters;
+     
     
     private int currentDominant;
     
-    TagteamUnit(String ch0, String ch1, int y, int x)
+    /*
+     * Constructor
+     */
+    TagteamUnit(String name, String ch0, boolean ranged0, String ch1, boolean ranged1, int y, int x)
     {
-    char0 = new ChangingCharacter(ch0);
-    char1 = new ChangingCharacter(ch1);
+    super(name, y, x);   
+        
+    characters = new ChangingCharacter[2];
     
-    currentDominant = 1;
-
-    locationY = y;
-    locationX = x;
+    characters[0] = new ChangingCharacter(ch0, ranged0);
+    characters[1] = new ChangingCharacter(ch1, ranged1);
+    
+    currentDominant = 0;
+ 
     
     }
 
@@ -38,56 +40,67 @@ public class TagteamUnit implements Unit {
     @Override
     public void draw(Graphics g, Viewport v) { 
         
-        if(getCurrentDominant()==0)
-        { 
-        drawTeam(g, v, getChar0(), getChar1()); 
+        g.translate(v.getTileSize()*getLocationX(), v.getTileSize()*getLocationY());  
+      characters[currentDominant].drawChanger(g, v, 0);
+      characters[(currentDominant+1)%2].drawChanger(g, v, 1); 
+      g.translate(-v.getTileSize()*getLocationX(), -v.getTileSize()*getLocationY()); 
+    }
+    
+     
+
+        /*
+     * The Dominant character and his or her weapon changes place
+     */
+    @Override
+    public void transformToAlternate() {
+         if(getCurrentDominant()==0)
+        {
+        setCurrentDominant(1);
         }
         else
-        { 
-        drawTeam(g, v, getChar1(), getChar0()); 
+        setCurrentDominant(0);
+    }
+
+   
+
+    @Override
+    public void moveUnit(int y, int x, WorldScreen w) {
+        
+        
+        if(w.getTmap().getTile(y, x).isOccupied()) return;
+        w.getTmap().getTile( getLocationY(), getLocationX()).setOccupiedPerson(false, "");
+       
+        /*
+         * Can only move 4 tiles
+         * TODO: makes this based on a speed stat
+         */
+         if( (Math.abs(y-this.getLocationY())+Math.abs(x-this.getLocationX()))<4)
+        {
+         setLocationY(y);
+         setLocationX(x);
         }
+        
+        w.getTmap().getTile( getLocationY(), getLocationX()).setOccupiedPerson(true, getName());
+        
+       
     }
     
-     /*
-     * Drawing the tagteam
-     */
+      @Override
+    boolean canHit(Unit target, WorldScreen w) {
+       
+      if(characters[(currentDominant+1)%2].isRanged()) return true;
+        
+      if(Math.abs(this.getLocationX()-target.getLocationX())==1 || 
+       Math.abs(this.getLocationY()-target.getLocationY())==1) return true;
+      
+      return false;
+    }
+ 
     
-    public void drawTeam(Graphics g, Viewport v, ChangingCharacter wielder, ChangingCharacter weapon)
-    { 
-         
-      g.translate(v.getTileSize()*locationX, v.getTileSize()*locationY);  
-      wielder.drawChanger(g, v, 0);
-      weapon.drawChanger(g, v, 1); 
-      g.translate(-v.getTileSize()*locationX, -v.getTileSize()*locationY);
-    }
-
-    /**
-     * @return the char0
-     */
-    public ChangingCharacter getChar0() {
-        return char0;
-    }
-
-    /**
-     * @param char0 the char0 to set
-     */
-    public void setChar0(ChangingCharacter char0) {
-        this.char0 = char0;
-    }
-
-    /**
-     * @return the char1
-     */
-    public ChangingCharacter getChar1() {
-        return char1;
-    }
-
-    /**
-     * @param char1 the char1 to set
-     */
-    public void setChar1(ChangingCharacter char1) {
-        this.char1 = char1;
-    }
+    
+    
+     
+  
 
     /**
      * @return the currentDominant
@@ -103,51 +116,5 @@ public class TagteamUnit implements Unit {
         this.currentDominant = currentDominant;
     }
 
-    @Override
-    public void transformToAlternate() {
-         if(getCurrentDominant()==0)
-        {
-        setCurrentDominant(1);
-        }
-        else
-        setCurrentDominant(0);
-    }
-
-    /**
-     * @return the locationY
-     */
-    public int getLocationY() {
-        return locationY;
-    }
-
-    /**
-     * @param locationY the locationY to set
-     */
-    public void setLocationY(int locationY) {
-        this.locationY = locationY;
-    }
-
-    /**
-     * @return the locationX
-     */
-    public int getLocationX() {
-        return locationX;
-    }
-
-    /**
-     * @param locationX the locationX to set
-     */
-    public void setLocationX(int locationX) {
-        this.locationX = locationX;
-    }
-
-    @Override
-    public void moveUnit(int y, int x) {
-        
-        if( (Math.abs(y-this.locationY)+Math.abs(x-this.locationX))<6)
-        {
-         setLocationY(y);
-         setLocationX(x);
-        }
-    }
+  
 }

@@ -28,7 +28,7 @@ public class GameCanvas extends Canvas{
       this.v = new Viewport();
       v.setTileMaxX(world.getTmap().getWidthInTiles());
       v.setTileMaxY(world.getTmap().getHeightInTiles());
-      
+      v.setBottomMenuHeight(world.getBottomMenuHeight());
       }
     
     

@@ -21,9 +21,13 @@ public class Viewport{
     private int cx = 0;
     private int cy = 0;
 
-    private int tileMaxY;
-    private int tileMaxX;
+    private int tileMaxY = 0;
+    private int tileMaxX = 0;
     
+    private int topMenuHeight = 0;
+    private int leftMenuWidth = 0;
+    private int rightMenuWidth = 0;
+    private int bottomMenuHeight = 0;
     
     /*
      * Scrolling
@@ -41,10 +45,44 @@ public class Viewport{
      
     if(widthInTiles+offX>tileMaxX) 
     {offX-=1;}
-    if(heightInTiles-2+offY>tileMaxY) 
+    if(heightInTiles-bottomMenuHeight+offY>tileMaxY) 
     {offY-=1;}
     }
     
+    
+    void centerOn(int y, int x)
+    {
+      
+       int centX = (int) ((this.getPfieldWidth()/2)+1); 
+       int centY = (int) ((this.getPfieldHeight()/2)+1);
+       
+       this.offX = x-this.widthInTiles+centX;
+       if(offX<0) offX = 0; 
+       if(offX+this.widthInTiles>this.tileMaxX) offX = this.tileMaxX-this.widthInTiles; 
+         
+       
+       this.offY = y-this.getPfieldHeight()+centY;
+       if(offY<0) offY = 0; 
+       if(offY+this.getPfieldHeight()>this.tileMaxY) 
+       offY = this.tileMaxY-this.getPfieldHeight(); 
+       
+    
+    }
+    
+    
+    public int getPfieldWidth()
+    {
+    
+    return this.widthInTiles;
+    
+    }
+    
+    public int getPfieldHeight()
+    {
+    
+    return this.heightInTiles-this.bottomMenuHeight;
+    
+    }
     
     
     /**
@@ -185,6 +223,20 @@ public class Viewport{
      */
     public void setTileMaxX(int tileMaxX) {
         this.tileMaxX = tileMaxX;
+    }
+
+    /**
+     * @return the bottomMenuHeight
+     */
+    public int getBottomMenuHeight() {
+        return bottomMenuHeight;
+    }
+
+    /**
+     * @param bottomMenuHeight the bottomMenuHeight to set
+     */
+    public void setBottomMenuHeight(int bottomMenuHeight) {
+        this.bottomMenuHeight = bottomMenuHeight;
     }
 
     

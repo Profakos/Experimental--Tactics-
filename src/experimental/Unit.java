@@ -17,13 +17,16 @@ public abstract class Unit {
     private int locationX;
     private int tileSpeed;
     
+    private int actionPoints;
+    
     Unit(String name, int lY, int lX)
     {
     this.name = name;
     this.locationY = lY;
     this.locationX = lX;
     
-    this.tileSpeed = 3;
+    this.tileSpeed = 6;
+    this.actionPoints = 2;
     }
     
     /*
@@ -31,11 +34,28 @@ public abstract class Unit {
      */
     abstract void draw(Graphics g, Viewport v);
     
+    /*
+     * A string for the menu to display when selected
+     */
+    String menuDisplay()
+    {
+    return name;
+    };
+    
+    /*
+     * handles action of the move command. Pathfinding and action points
+     */
+    void moveCommand(int y, int x, WorldScreen w)
+    {
+    moveUnit(y, x, w);
+    }
     
     /*
      * moves the unit to somewhere
      */
     abstract void moveUnit(int y, int x, WorldScreen w);
+    
+    
 
     /*
      * respawn on a random tile
@@ -82,6 +102,13 @@ public abstract class Unit {
     return 0;
     };
     
+    /*
+     * @Updates the character
+     */
+    void update(WorldScreen w)
+    {
+    this.actionPoints = 2;
+    }
     
     /**
      * @return the name
@@ -137,5 +164,19 @@ public abstract class Unit {
      */
     public void setTileSpeed(int moveSpeed) {
         this.tileSpeed = moveSpeed;
+    }
+
+    /**
+     * @return the actionPoints
+     */
+    public int getActionPoints() {
+        return actionPoints;
+    }
+
+    /**
+     * @param actionPoints the actionPoints to set
+     */
+    public void setActionPoints(int actionPoints) {
+        this.actionPoints = actionPoints;
     }
 }

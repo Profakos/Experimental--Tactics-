@@ -96,11 +96,11 @@ public class WorldScreen implements Screen{
            */
           if(cy<v.getHeightInTiles()-v.getBottomMenuHeight())
           {
-             playfieldClick(cy, cx, v);
+             clickPlayfield(cy, cx, v);
           }
           else
           { 
-             menuClick(cy, cx, v);
+             clickMenu(cy, cx, v);
             
           }
           
@@ -115,17 +115,26 @@ public class WorldScreen implements Screen{
     /*
      * Clicked on the playingField half
      */
-     private void playfieldClick(int cy, int cx, Viewport v){
+     private void clickPlayfield(int cy, int cx, Viewport v){
+         
+          if(playerCharGroup.getCurrentSelected().getActionPoints()==0) return;
          
             if(!tmap.getTile(cy + v.getOffY(), cx + v.getOffX()).isOccupied())
               {
                 playerCharGroup.moveUnit(cy + v.getOffY(), cx + v.getOffX(), this);
+                 
               }
               else
               {
                 if(tmap.getTile(cy + v.getOffY(), cx + v.getOffX()).getOccupName().equals(target.getName()))
                  {
-                     if(playerCharGroup.getCurrentSelected().canHit(target, this)){  target.respawn(this);}  
+                     if(playerCharGroup.getCurrentSelected().getActionPoints()==0) return;
+                     
+                     if(playerCharGroup.getCurrentSelected().canHit(target, this))
+                     {  
+                         playerCharGroup.getCurrentSelected().setActionPoints(0);
+                         target.respawn(this);
+                     }  
                  }
               }
              
@@ -134,13 +143,18 @@ public class WorldScreen implements Screen{
      /*
       * Clicked on the Menu half
       */
-    private void menuClick(int cy, int cx, Viewport v) {
+    private void clickMenu(int cy, int cx, Viewport v) {
        switch(cx){
                 case (0): playerCharGroup.prevnextUnit(-1);
                 break;
                 case (1): playerCharGroup.prevnextUnit(1); 
                 break;
-                case (2): playerCharGroup.getCurrentSelected().transformToAlternate(); break;
+                case (2): playerCharGroup.update(this); break;
+                case (3): 
+                if(playerCharGroup.getCurrentSelected().getActionPoints()==0) break;    
+                playerCharGroup.getCurrentSelected().transformToAlternate(); 
+                playerCharGroup.getCurrentSelected().setActionPoints(0);
+                break;
                 default: break;
                 }
     }
@@ -216,18 +230,19 @@ public class WorldScreen implements Screen{
         int curx = getPlayerCharGroup().getCurrentSelected().getLocationX();
         int cury = getPlayerCharGroup().getCurrentSelected().getLocationY();
         
-        int dist =  getPlayerCharGroup().getCurrentSelected().getModifiedTileSpeed();
-        
-        for(int ii = -dist; ii<dist+1; ii++)
-        {
+         if(getPlayerCharGroup().getCurrentSelected().getActionPoints()!=0)
+         {
+            int dist =  getPlayerCharGroup().getCurrentSelected().getModifiedTileSpeed();
+            for(int ii = -dist; ii<dist+1; ii++)
+            {
             for(int jj = -dist; jj<dist+1; jj++)
             { 
              if(Math.abs(jj)+Math.abs(ii)>dist) continue;   
                 
           g.drawImage(ImageRegistry.getImage("move_highlight"), (curx+ii-v.getOffX())*v.getTileSize(), (cury+jj-v.getOffY())*v.getTileSize(), null); 
             }
-        }
-        
+            }
+         }
          
         getPlayerCharGroup().draw(g, v);
         
@@ -242,19 +257,33 @@ public class WorldScreen implements Screen{
         
         int bh = v.getBottomMenuHeight();
         
-        g.setColor(Color.gray);
-        g.fillRect(0, v.getTileSize()*(v.getHeightInTiles()-bh), v.getTileSize()*v.getWidthInTiles(), v.getTileSize()*2);
-        g.setColor(Color.black);
-        g.drawRect(0, v.getTileSize()*(v.getHeightInTiles()-bh), v.getTileSize()*v.getWidthInTiles(), v.getTileSize()*2);
+        g.translate(0, v.getTileSize()*(v.getHeightInTiles()-bh));
         
+        g.setColor(Color.gray);
+        g.fillRect(0, 0, v.getTileSize()*v.getWidthInTiles(), v.getTileSize()*2);
+        g.setColor(Color.black);
+        g.drawRect(0, 0, v.getTileSize()*v.getWidthInTiles(), v.getTileSize()*2);
+        
+       
+        g.drawString(this.playerCharGroup.getCurrentSelected().menuDisplay(), 0, 20);
+       
         /*
          * Draws the menu icons
          */
         
-        g.drawImage(ImageRegistry.getImage("PREVCHAR_Icon"), 0, v.getTileSize()*(v.getHeightInTiles()-bh), null);
-        g.drawImage(ImageRegistry.getImage("NEXTCHAR_Icon"), v.getTileSize(), v.getTileSize()*(v.getHeightInTiles()-bh), null);
-        g.drawImage(ImageRegistry.getImage("CHANGE_Icon"), v.getTileSize()*2, v.getTileSize()*(v.getHeightInTiles()-bh), null);
-    
+        /*
+         * Universal Icons
+         */
+        g.drawImage(ImageRegistry.getImage("PREVCHAR_Icon"), 0, v.getTileSize(), null);
+        g.drawImage(ImageRegistry.getImage("NEXTCHAR_Icon"), v.getTileSize(), v.getTileSize(), null);
+        g.drawImage(ImageRegistry.getImage("ENDTURN_Icon"), v.getTileSize()*2, v.getTileSize(), null);
+        
+        /*
+         * Chartype specific icons
+         */
+        g.drawImage(ImageRegistry.getImage("CHANGE_Icon"), v.getTileSize()*3, v.getTileSize(), null);
+         
+        g.translate(0, -v.getTileSize()*(v.getHeightInTiles()-bh));
     }
 
     /**

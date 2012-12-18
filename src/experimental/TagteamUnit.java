@@ -64,7 +64,17 @@ public class TagteamUnit extends Unit{
         
     }
 
+   @Override
+   public void moveCommand(int y, int x, WorldScreen w)
+   {
+   int ty = this.getLocationY();
+   int tx = this.getLocationX();
+   moveUnit(y, x, w);
    
+   if(ty!=this.getLocationX() || tx!=this.getLocationY())
+       this.setActionPoints(this.getActionPoints()-1); //if moved
+   
+   }
 
     @Override
     public void moveUnit(int y, int x, WorldScreen w) {
@@ -94,8 +104,8 @@ public class TagteamUnit extends Unit{
        
       if(characters[(currentDominant+1)%2].isRanged()) return true;
         
-      if(Math.abs(this.getLocationX()-target.getLocationX())==1 || 
-       Math.abs(this.getLocationY()-target.getLocationY())==1) return true;
+      if(Math.abs(this.getLocationX()-target.getLocationX())<=1 && 
+       Math.abs(this.getLocationY()-target.getLocationY())<=1) return true;
       
       return false;
     }
@@ -104,6 +114,15 @@ public class TagteamUnit extends Unit{
     @Override
      int getModifiedTileSpeed(){
        return this.getTileSpeed()+characters[(currentDominant+1)%2].getBonusTileSpeed();
+    }
+    
+    
+    @Override
+    String menuDisplay()
+    {
+    return "Team " + this.getName() + " WIELDER: " +
+          "\n" + characters[currentDominant].getName() +
+          "\n" + " WEAPON: "+characters[(currentDominant+1)%2].getName();
     }
 
     /**

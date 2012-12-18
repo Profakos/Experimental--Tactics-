@@ -22,7 +22,7 @@ public class ChangingCharacter {
        this.name = name;
        this.ranged = ranged;
        
-       bonusTileSpeed  = ranged ? 0 : 1;
+       bonusTileSpeed  = ranged ? 0 : 2;
     }
     
     void drawChanger(Graphics g, Viewport v, int state)

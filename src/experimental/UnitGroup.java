@@ -41,6 +41,15 @@ public class UnitGroup {
         }
           
     }
+    
+    void update(WorldScreen w)
+    {
+    for(int ii = 0; ii<this.units.size(); ii++)
+        {
+            this.units.get(ii).update(w);
+        }
+    
+    }
 
  
     void prevnextUnit(int dir)
@@ -57,7 +66,7 @@ public class UnitGroup {
      */
     void moveUnit(int y, int x, WorldScreen w) {
           
-        getCurrentSelected().moveUnit(y, x, w); 
+        getCurrentSelected().moveCommand(y,x,w);
     }
 
     /**

@@ -33,55 +33,61 @@ public class Viewport{
      * Scrolling
      */
     void scroll(Directions directions) {
-         switch(directions)
-        {
+         switch(directions) {
         case N: this.offY = offY-1; break;
         case S: this.offY = offY+1; break;
         case E: this.offX = offX+1; break;
         case W: this.offX = offX-1; break;
         }
-    if(this.offY<0) offY=0;
-    if(this.offX<0) offX = 0;
+        if(this.offY<0)
+            offY=0;
+        if(this.offX<0)
+            offX = 0;
      
-    if(widthInTiles+offX>tileMaxX) 
-    {offX-=1;}
-    if(heightInTiles-bottomMenuHeight+offY>tileMaxY) 
-    {offY-=1;}
+        if(widthInTiles+offX>tileMaxX) {
+            offX-=1;
+        }
+        if(heightInTiles-bottomMenuHeight+offY>tileMaxY) {
+        offY-=1;
+        }
     }
     
-    
-    void centerOn(int y, int x)
-    {
+    /*
+     * Centers the camera on these coordinates
+     */
+    void centerOn(int y, int x) {
       
        int centX = (int) ((this.getPfieldWidth()/2)+1); 
        int centY = (int) ((this.getPfieldHeight()/2)+1);
        
        this.offX = x-this.widthInTiles+centX;
-       if(offX<0) offX = 0; 
-       if(offX+this.widthInTiles>this.tileMaxX) offX = this.tileMaxX-this.widthInTiles; 
+       if(offX<0) 
+           offX = 0; 
+       if(offX+this.widthInTiles>this.tileMaxX) 
+           offX = this.tileMaxX-this.widthInTiles; 
          
        
        this.offY = y-this.getPfieldHeight()+centY;
-       if(offY<0) offY = 0; 
+       if(offY<0) 
+           offY = 0; 
        if(offY+this.getPfieldHeight()>this.tileMaxY) 
-       offY = this.tileMaxY-this.getPfieldHeight(); 
+        offY = this.tileMaxY-this.getPfieldHeight(); 
        
     
     }
     
-    
-    public int getPfieldWidth()
-    {
-    
-    return this.widthInTiles;
-    
+     /**
+     * @return the Playerfield widthInTiles
+     */
+    public int getPfieldWidth() {
+        return this.widthInTiles-this.rightMenuWidth-this.leftMenuWidth;
     }
     
-    public int getPfieldHeight()
-    {
-    
-    return this.heightInTiles-this.bottomMenuHeight;
-    
+     /**
+     * @return the Playerfield heightInTiles
+     */
+    public int getPfieldHeight(){
+        return this.heightInTiles-this.bottomMenuHeight-this.topMenuHeight;
     }
     
     

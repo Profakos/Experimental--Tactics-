@@ -72,9 +72,10 @@ class GameWindow extends Frame {
         this.timer1 = timer1;
     }
     
-   
-    class MainWindowAdapter extends WindowAdapter
-    {
+    /*
+     * WindowAdapter inner class
+     */
+    class MyWindowAdapter extends WindowAdapter{
      
         @Override
            public void windowClosing(WindowEvent e) { 
@@ -82,34 +83,33 @@ class GameWindow extends Frame {
            Window ee = e.getWindow(); 
            ee.dispose();
          }
-        
-    
     }
     
-     class MyMouseListener extends MouseAdapter
-    {
+    /*
+     * MouseAdapter innerclass
+     */
+     class MyMouseListener extends MouseAdapter{
 
         @Override
         public void mousePressed(MouseEvent e) {
             
-              if(getCanvas().getMousePosition()!=null)
-        {
+              if(getCanvas().getMousePosition()!=null) {
             getCanvas().setCurx(getCanvas().getMousePosition().x);
             getCanvas().setCury(getCanvas().getMousePosition().y);
-        } 
-     else
-     {
-            getCanvas().setCurx(-1);
-            getCanvas().setCury(-1);
-     }
+            } 
+              else {
+                getCanvas().setCurx(-1);
+                getCanvas().setCury(-1);
+                    }
             world.screenClick(canvas.getV());
            
-            } 
-              
+            }        
     }
    
-    class MyKeyListener extends KeyAdapter
-            {
+     /*
+      * KeyAdapter innerclass
+      */
+    class MyKeyListener extends KeyAdapter {
         @Override
         public void keyPressed(KeyEvent e) {
             switch(e.getKeyCode())
@@ -130,16 +130,15 @@ class GameWindow extends Frame {
             
     }
      
-     
-         class TimerListener implements ActionListener
-    {
+     /*
+      * ActionListener innerclass for the timer
+      */
+         class TimerListener implements ActionListener {
 
         @Override
         public void actionPerformed(ActionEvent e) {
              update();
         }
-    
-    
     }
     
     
@@ -152,70 +151,72 @@ class GameWindow extends Frame {
     
     private Timer timer1;
     
-    GameWindow()
-    {
+    /*
+     * Constructor
+     */
+    GameWindow() {
         super("Experimental");
         
-         init();
+        init();
         
-         this.addWindowListener(new MainWindowAdapter());
+        this.addWindowListener(new MyWindowAdapter());
          
-            gamepanel = new Panel();
-            gamepanel.setFocusable(false);
+        gamepanel = new Panel();
+        gamepanel.setFocusable(false);
             
-            canvas = new GameCanvas(world);
-            canvas.setSize(650, 650);
-            canvas.setFocusable(true);
+        canvas = new GameCanvas(world);
+        canvas.setSize(650, 650);
+        canvas.setFocusable(true);
             
-            gamepanel.add(canvas);
+        gamepanel.add(canvas);
             
-            this.add(gamepanel);
+        this.add(gamepanel);
             
-            canvas.addMouseListener(new MyMouseListener());
-            canvas.addKeyListener(new MyKeyListener());
+        canvas.addMouseListener(new MyMouseListener());
+        canvas.addKeyListener(new MyKeyListener());
             
-            this.setBounds(100, 20, 650, 650);
+        this.setBounds(100, 20, 650, 650);
             
-            this.setResizable(false);
-            this.setVisible(true);
-            this.pack();
+        this.setResizable(false);
+        this.setVisible(true);
+        this.pack();
             
-            timer1.start();
+        run();
     
     }
     
-    //initializes things
-    private void init()
-    { 
+    /*
+     * Initializes the world
+     */
+    private void init() { 
         setWorld(new WorldScreen());
         setImages(new ImageRegistry());
         setTimer1(new Timer(100, new TimerListener()));  
     }
     
-    void run(){ getTimer1().start();}
+    /*
+     * The game begins
+     */
+    void run(){ 
+        getTimer1().start();
+    }
     
     
     /*
      * Updates the world, redraws the screen
      */
-    void update()
-    {
-        
-//        getWorld().update();
-        
-        
-     if(getCanvas().getMousePosition()!=null)
-        {
+    void update() {
+         
+     if(getCanvas().getMousePosition()!=null) {
             getCanvas().setCurx(getCanvas().getMousePosition().x);
             getCanvas().setCury(getCanvas().getMousePosition().y);
         } 
-     else
-     {
+        else {
             getCanvas().setCurx(-1);
             getCanvas().setCury(-1);
-     }
+       }
      
-        getCanvas().repaint();
+      getCanvas().repaint();
     }
-    ;
+    
 }

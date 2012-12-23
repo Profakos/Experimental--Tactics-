@@ -19,9 +19,10 @@ public class GameCanvas extends Canvas{
     private WorldScreen world;
   
     
-     
-    GameCanvas(WorldScreen world)
-      {
+     /*
+      * Constructor
+      */
+    GameCanvas(WorldScreen world) {
       this.world = world;
       this.setBackground(Color.black); 
       
@@ -31,35 +32,29 @@ public class GameCanvas extends Canvas{
       v.setBottomMenuHeight(world.getBottomMenuHeight());
       }
     
-    
+    /*
+     * Updates the canvas
+     */
      @Override
-    public void update(Graphics g)
-    { 
-       Graphics offgc;
-	Image offscreen;
+    public void update(Graphics g) { 
+        Graphics offgc;
+        Image offscreen;
 	  
 	offscreen = createImage(this.getWidth(), this.getHeight());
 	offgc = offscreen.getGraphics(); 
 	paint(offgc); 
 	g.drawImage(offscreen, 0, 0, this);    
-             
-  //  paint(g);
-    g.dispose();
-    offgc.dispose();
+        g.dispose();
+        offgc.dispose();
     };
     
-    @Override
-    public void paint(Graphics g)
-    {
-     g.clearRect(0, 0, this.getWidth(), this.getHeight());
-   
      /*
-      * Draws the world
+      * Paints the screen
       */
-        getWorld().draw(g, getV());
-     
-      
-     
+    @Override
+    public void paint(Graphics g) {
+     g.clearRect(0, 0, this.getWidth(), this.getHeight());
+     getWorld().draw(g, getV());
     };
     
     void setCurx(int i){getV().setCx(i);}

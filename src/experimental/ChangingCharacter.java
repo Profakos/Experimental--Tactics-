@@ -14,20 +14,24 @@ public class ChangingCharacter {
 
     private String name;
     private boolean ranged;
-    
-    
     private int bonusTileSpeed;
     
+   
+    /*
+     * Constructor
+     */
     ChangingCharacter(String name, boolean ranged) {
        this.name = name;
        this.ranged = ranged;
-       
        bonusTileSpeed  = ranged ? 0 : 2;
     }
     
-    void drawChanger(Graphics g, Viewport v, int state)
-    {
-     g.drawImage(ImageRegistry.getImage(getName() + "_Char"), 0, 0, 50, 50, state*v.getTileSize(), 0, (state+1)*v.getTileSize(), 50, null);
+    /*
+     * Draws this unit 
+     */
+    void draw(Graphics g, Viewport v, int state) {
+        g.drawImage(ImageRegistry.getImage(getName() + "_Char"), 0, 0, 
+        v.getTileSize(), v.getTileSize(), state*v.getTileSize(), 0, (state+1)*v.getTileSize(), 50, null);
     }
 
     /**

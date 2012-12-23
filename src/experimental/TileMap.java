@@ -40,7 +40,7 @@ public class TileMap{
     return getTiles().get(x+this.getWidthInTiles()*y);
         }
         catch(Exception e){  
-            System.out.println("Y" + y + ",X" + x+") tile returned with a null");
+            System.out.println("Y" + y + ",X" + x+") tile returned with a null in TileMap.getTiles");
             return null;
         }
         
@@ -50,13 +50,14 @@ public class TileMap{
     public void draw(Graphics g, Viewport v) {
        
           /*
-           * Draws every tile
+           * Draws a viewport sized chunk of tiles
            */ 
           
-        for(int i = 0; i<Math.min(getHeightInTiles(), v.getHeightInTiles()-2); i++)
+        for(int i = 0; i<Math.min(getHeightInTiles(), v.getHeightInTiles()-v.getBottomMenuHeight()); i++)
         {
             for(int j=0; j<Math.min(getWidthInTiles(), v.getWidthInTiles()); j++)
             { 
+             
                 
               g.translate(j*50, i*50);  
               try{

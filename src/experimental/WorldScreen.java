@@ -141,11 +141,24 @@ public class WorldScreen implements Screen {
         int cury = getPlayerCharGroup().getCurrentSelected().getLocationY();
         
          if(getPlayerCharGroup().getCurrentSelected().getActionPoints()!=0) {
-            int dist =  getPlayerCharGroup().getCurrentSelected().getModifiedTileSpeed();
+             /*
+              * TODO: Collapse these two into a single for cycle
+              */
+            int dist =  getPlayerCharGroup().getCurrentSelected().getCurrentTileSpeed();
             for(int ii = -dist; ii<dist+1; ii++) {
                 for(int jj = -dist; jj<dist+1; jj++) { 
              if(Math.abs(jj)+Math.abs(ii)>dist) continue;   
               g.drawImage(ImageRegistry.getImage("move_highlight"), 
+                      (curx+ii-v.getOffX())*v.getTileSize(), (cury+jj-v.getOffY())*v.getTileSize(), null); 
+                    }
+                }
+            
+            
+              dist =  getPlayerCharGroup().getCurrentSelected().getCurrentRange();
+            for(int ii = -dist; ii<dist+1; ii++) {
+                for(int jj = -dist; jj<dist+1; jj++) { 
+             if(Math.abs(jj)+Math.abs(ii)!=dist) continue;   
+              g.drawImage(ImageRegistry.getImage("range_highlight"), 
                       (curx+ii-v.getOffX())*v.getTileSize(), (cury+jj-v.getOffY())*v.getTileSize(), null); 
                     }
                 }

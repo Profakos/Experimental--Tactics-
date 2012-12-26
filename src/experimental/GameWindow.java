@@ -71,6 +71,20 @@ class GameWindow extends Frame {
     public void setTimer1(Timer timer1) {
         this.timer1 = timer1;
     }
+
+    /**
+     * @return the skills
+     */
+    public SkillRegistry getSkills() {
+        return skills;
+    }
+
+    /**
+     * @param skills the skills to set
+     */
+    public void setSkills(SkillRegistry skills) {
+        this.skills = skills;
+    }
     
     /*
      * WindowAdapter inner class
@@ -145,6 +159,7 @@ class GameWindow extends Frame {
     Panel gamepanel;
     
     private ImageRegistry images;
+    private SkillRegistry skills;
     
     private GameCanvas canvas;
     private WorldScreen world;
@@ -189,15 +204,19 @@ class GameWindow extends Frame {
      * Initializes the world
      */
     private void init() { 
-        setWorld(new WorldScreen());
+        
         setImages(new ImageRegistry());
+        setSkills(new SkillRegistry());
+        
+        setWorld(new WorldScreen());
+        
         setTimer1(new Timer(100, new TimerListener()));  
     }
     
     /*
      * The game begins
      */
-    void run(){ 
+    private void run(){ 
         getTimer1().start();
     }
     

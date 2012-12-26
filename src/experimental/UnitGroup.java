@@ -23,9 +23,10 @@ public class UnitGroup {
      */
     UnitGroup() {
     units = new ArrayList<>();    
-    units.add(new TagteamUnit("alpha", "sound", false, "clean", false, 0, 0));
-    units.add(new TagteamUnit("beta", "tech", true, "water", true, 0, 1));
+   // units.add(new TagteamUnit("alpha", "sound", false, "clean", false, 0, 0));
+   // units.add(new TagteamUnit("beta", "tech", true, "water", true, 0, 1));
     units.add(new TagteamUnit("gamma","blood", false, "ghost", true, 0, 2));
+    units.add(new SimpleUnit("carp", 0, 1));
     }
     
     /*

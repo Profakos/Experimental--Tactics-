@@ -12,7 +12,7 @@ import java.awt.Graphics;
  */
 public class TagteamUnit extends Unit{
      
-    private ChangingCharacter[] characters;
+    private TagComponentUnit[] characters;
     private int currentDominant;
     
     /*
@@ -22,11 +22,13 @@ public class TagteamUnit extends Unit{
             boolean ranged1, int y, int x) {
     super(name, y, x);   
         
-    characters = new ChangingCharacter[2];
-    characters[0] = new ChangingCharacter(ch0, ranged0);
-    characters[1] = new ChangingCharacter(ch1, ranged1);
+    characters = new TagComponentUnit[2];
+    characters[0] = new TagComponentUnit(ch0, ranged0);
+    characters[1] = new TagComponentUnit(ch1, ranged1);
     currentDominant = 0;
-    this.getSkillList().add(new Skill()); 
+    
+    this.getSkillList().add(new Skill("Transform")); 
+    
     
     }
 
@@ -56,19 +58,6 @@ public class TagteamUnit extends Unit{
             setCurrentDominant(0);
     }
   
-    /*
-     * Overrides the canHit function
-     */
-      @Override
-    boolean canHit(Unit target, WorldScreen w) {
-      if(characters[(currentDominant+1)%2].isRanged()) 
-          return true;
-      if(Math.abs(this.getLocationX()-target.getLocationX())<=1 && 
-       Math.abs(this.getLocationY()-target.getLocationY())<=1) 
-          return true;
-      
-      return false;
-    }
  
     /*
      * @return the status for the menu
@@ -83,12 +72,20 @@ public class TagteamUnit extends Unit{
       
     /*
      * Overrides the modified tilespeed function
-     */
+     */ 
     @Override
-     int getModifiedTileSpeed(){
-       return this.getTileSpeed()+characters[(currentDominant+1)%2].getBonusTileSpeed();
+     public int getCurrentTileSpeed(){
+       return this.getTileSpeed() + this.getBonusTileSpeed()+characters[(currentDominant+1)%2].getBonusTileSpeed();
     }
     
+     
+     /*
+     * Returns the modified range
+     */
+    @Override
+    public int getCurrentRange() {
+        return this.getRange() + this.getBonusRange() + characters[(currentDominant+1)%2].getBonusRange();
+    }
      
     /**
      * @return the currentDominant

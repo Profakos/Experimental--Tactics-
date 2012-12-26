@@ -1,0 +1,3 @@
+NEWSKILL	name //There can be only one name
+image	imagename //There can be only one image
+[callfunction	(transformToAlternate | randomPort)]  //There can be only one called function [this might change]

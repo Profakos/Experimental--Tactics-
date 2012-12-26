@@ -19,7 +19,12 @@ public abstract class Unit {
     private String image;
     private int locationY;
     private int locationX;
+    
+    private int range;
+    private int bonusRange;
+    
     private int tileSpeed;
+    private int bonusTileSpeed;
     
     private int actionPoints;
     
@@ -36,7 +41,12 @@ public abstract class Unit {
     this.locationY = lY;
     this.locationX = lX;
     
-    this.tileSpeed = 6;
+    this.range = 1;
+    this.bonusRange = 0;
+    
+    this.tileSpeed = 7;
+    this.bonusTileSpeed = 0;
+    
     this.actionPoints = 2;
     
     currentHealth = 3;
@@ -69,7 +79,7 @@ public abstract class Unit {
      if(this.skillList.isEmpty()) return;    
      for(int ii = 0; ii<this.skillList.size(); ii++)
         {
-        g.drawImage(ImageRegistry.getImage("CHANGE_Icon"), v.getTileSize()*ii, 0, null);
+        g.drawImage(ImageRegistry.getImage(skillList.get(ii).getImage()), v.getTileSize()*ii, 0, null);
         }
      
      }
@@ -89,8 +99,7 @@ public abstract class Unit {
         int ty = this.getLocationY();
         int tx = this.getLocationX();
         moveUnit(y, x, w);
-        if(ty!=this.getLocationX() || tx!=this.getLocationY())
-        this.setActionPoints(this.getActionPoints()-1); //if moved
+        
     }
     
     /*
@@ -103,17 +112,28 @@ public abstract class Unit {
        
           
          if( (Math.abs(y-this.getLocationY())+Math.abs(x-this.getLocationX()))<=
-                 getModifiedTileSpeed())
+                 getCurrentTileSpeed())
         {
          setLocationY(y);
          setLocationX(x);
+         this.setActionPoints(this.getActionPoints()-1); //if moved
         }
         
         w.getTmap().getTile( getLocationY(), getLocationX()).setOccupiedPerson(true, getName());
-        
-   
-   
    };
+   
+   /*
+    * Moves the unit instantly
+    */
+   void teleportUnit(int y, int x, WorldScreen w) {
+       
+         if(w.getTmap().getTile(y, x).isOccupied()) return;
+         
+         w.getTmap().getTile( getLocationY(), getLocationX()).setOccupiedPerson(false, "");
+         this.setLocationY(y);
+         this.setLocationX(x);
+         w.getTmap().getTile( getLocationY(), getLocationX()).setOccupiedPerson(true, getName());
+   }
     
     
 
@@ -123,29 +143,23 @@ public abstract class Unit {
     
     void respawn(WorldScreen w)
     {
+    this.setCurrentHealth(this.maxHealth);
     
-    int newy;
-    int newx;
-    
-    /*
-     * randomizes the new location at least once
-     */
-    do
-    {
-    newy = w.getRgen().nextInt(w.getTmap().getHeightInTiles());
-    newx = w.getRgen().nextInt(w.getTmap().getWidthInTiles()); 
-    }
-    while(w.getTmap().getTile(newy, newx).isOccupied());
-    
-    moveUnit(newy, newx, w);
-    
+    randomPort(w);
     }
     
     /*
      * Checks if this unit can perform an attack on the target
      */
      boolean canHit(Unit target, WorldScreen aThis) {
-     return true;  
+         
+      int dist = this.getCurrentRange();
+      if(Math.abs(this.getLocationX()-target.getLocationX())<=dist && 
+       Math.abs(this.getLocationY()-target.getLocationY())<=dist) 
+          return true;
+      
+      return false;
+      
     }
     
      
@@ -162,15 +176,10 @@ public abstract class Unit {
     /*
      * For units that have alternate forms
      */
-    abstract void transformToAlternate();
-    
-    /*
-     * The Distance it can move in tiles, modified by effects
-     */
-    int getModifiedTileSpeed()
-    {
-    return 0;
+    void transformToAlternate() {
     };
+    
+    
     
     /*
      * @Updates the character
@@ -311,6 +320,85 @@ public abstract class Unit {
      */
     public void setImage(String image) {
         this.image = image;
+    }
+
+    /**
+     * @return the buffedTileSpeed
+     */
+    public int getBonusTileSpeed() {
+        return bonusTileSpeed;
+    }
+
+    /**
+     * @param buffedTileSpeed the buffedTileSpeed to set
+     */
+    public void setBonusTileSpeed(int buffedTileSpeed) {
+        this.bonusTileSpeed = buffedTileSpeed;
+    }
+    
+    /*
+     * Returns the modified tilespeed
+     */
+    public int getCurrentTileSpeed() {
+        return this.getTileSpeed() + this.getBonusTileSpeed();
+    }
+
+    /**
+     * @return the range
+     */
+    public int getRange() {
+        return range;
+    }
+
+    /**
+     * @param range the range to set
+     */
+    public void setRange(int range) {
+        this.range = range;
+    }
+
+    /**
+     * @return the bonusrange
+     */
+    public int getBonusRange() {
+        return bonusRange;
+    }
+
+    /**
+     * @param bonusrange the bonusrange to set
+     */
+    public void setBonusRange(int bonusrange) {
+        this.bonusRange = bonusrange;
+    }
+    
+     /*
+     * Returns the modified range
+     */
+    public int getCurrentRange() {
+        return this.getRange() + this.getBonusRange();
+    }
+
+    /*
+     * randomly teleports on the map
+     */
+    public void randomPort(WorldScreen w) {
+    int newy;
+    int newx;
+    
+    /*
+     * randomizes the new location at least once
+     */
+     
+    do
+    {
+    newy = w.getRgen().nextInt(w.getTmap().getHeightInTiles());
+    newx = w.getRgen().nextInt(w.getTmap().getWidthInTiles()); 
+    }
+    while(w.getTmap().getTile(newy, newx).isOccupied());
+    
+    w.getTmap().getTile( getLocationY(), getLocationX()).setOccupiedPerson(true, getName());
+    
+    teleportUnit(newy, newx, w);
     }
     
 }

@@ -8,11 +8,7 @@ package experimental;
  *
  * @author Akos
  */
-
-/*
- * Used to call functions in skills
- */
-public enum UnitFunctionEnum {
-    transformToAlternate,
-    randomPort
+public enum SkillSettingEnum {
+    callfunction,
+    image
 }

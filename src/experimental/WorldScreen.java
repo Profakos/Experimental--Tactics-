@@ -15,7 +15,7 @@ import java.util.Random;
 public class WorldScreen implements Screen {
     
     private TileMap tmap;
-    private UnitGroup playerCharGroup;
+    private UnitGroup playerGroup;
     private TargetUnit target;
     private Random rgen;
     private int bottomMenuHeight;
@@ -27,12 +27,12 @@ public class WorldScreen implements Screen {
         rgen = new Random(); 
         bottomMenuHeight = 2; 
         tmap = new TileMap(15,15);  
-        playerCharGroup = new UnitGroup();
+        playerGroup = new UnitGroup();
     
-        for(int index = 0; index<playerCharGroup.getUnits().size(); index++) {
-            tmap.getTile(playerCharGroup.getUnits().get(index).getLocationY(), 
-            playerCharGroup.getUnits().get(index).getLocationX()).setOccupiedPerson(true,
-            playerCharGroup.getUnits().get(index).getName());
+        for(int index = 0; index<playerGroup.getUnits().size(); index++) {
+            tmap.getTile(playerGroup.getUnits().get(index).getLocationY(), 
+            playerGroup.getUnits().get(index).getLocationX()).setOccupiedPerson(true,
+            playerGroup.getUnits().get(index).getName());
         }
     
         target = new TargetUnit("target", 5, 5);
@@ -72,7 +72,7 @@ public class WorldScreen implements Screen {
           else { 
              clickMenu(cy, cx, v);
           }
-          v.centerOn(playerCharGroup.getCurrentSelected().getLocationY(), playerCharGroup.getCurrentSelected().getLocationX());
+          v.centerOn(playerGroup.getCurrentSelected().getLocationY(), playerGroup.getCurrentSelected().getLocationX());
           }catch(NullPointerException e){}
        }  
         
@@ -83,26 +83,21 @@ public class WorldScreen implements Screen {
      */
      private void clickPlayfield(int cy, int cx, Viewport v) {
          
-          if(playerCharGroup.getCurrentSelected().getActionPoints()==0) 
+          if(playerGroup.getCurrentSelected().getActionPoints()==0) 
               return;
          
           if(!tmap.getTile(cy + v.getOffY(), cx + v.getOffX()).isOccupied()) {
-                playerCharGroup.moveUnit(cy + v.getOffY(), cx + v.getOffX(), this);
+                playerGroup.moveUnit(cy + v.getOffY(), cx + v.getOffX(), this);
               }
           else {
                 if(tmap.getTile(cy + v.getOffY(), cx + v.getOffX())
                         .getOccupName().equals(target.getName())) {
-                     if(playerCharGroup.getCurrentSelected().getActionPoints()==0) 
+                     if(playerGroup.getCurrentSelected().getActionPoints()==0) 
                          return;
                      /*
                       * TODO: move this to an attack function
                       */
-                     if(playerCharGroup.getCurrentSelected().canHit(target, this)) {  
-                         playerCharGroup.getCurrentSelected().setActionPoints(0);
-                         target.modifyHealth(-1);
-                         if(target.getCurrentHealth()==0)
-                         target.respawn(this);
-                     }  
+                    playerGroup.getCurrentSelected().attack(target, this);
                  }
               }
      }
@@ -113,14 +108,14 @@ public class WorldScreen implements Screen {
     private void clickMenu(int cy, int cx, Viewport v) {
       if(cy==v.getHeightInTiles()-1)
        switch(cx){
-                case (0): playerCharGroup.prevnextUnit(-1);
+                case (0): playerGroup.prevnextUnit(-1);
                 break;
-                case (1): playerCharGroup.prevnextUnit(1); 
+                case (1): playerGroup.prevnextUnit(1); 
                 break;
-                case (2): playerCharGroup.update(this); break;
+                case (2): playerGroup.update(this); break;
                 default: 
                     if(cx>=3) { 
-                        playerCharGroup.getCurrentSelected().useSkill(cx-3, this); 
+                        playerGroup.getCurrentSelected().useSkill(cx-3, this); 
                     }
                     break;
                 }
@@ -137,14 +132,14 @@ public class WorldScreen implements Screen {
          /*
           * draw the characters
           */ 
-        int curx = getPlayerCharGroup().getCurrentSelected().getLocationX();
-        int cury = getPlayerCharGroup().getCurrentSelected().getLocationY();
+        int curx = getPlayerGroup().getCurrentSelected().getLocationX();
+        int cury = getPlayerGroup().getCurrentSelected().getLocationY();
         
-         if(getPlayerCharGroup().getCurrentSelected().getActionPoints()!=0) {
+         if(getPlayerGroup().getCurrentSelected().getActionPoints()!=0) {
              /*
               * TODO: Collapse these two into a single for cycle
               */
-            int dist =  getPlayerCharGroup().getCurrentSelected().getCurrentTileSpeed();
+            int dist =  getPlayerGroup().getCurrentSelected().getCurrentTileSpeed();
             for(int ii = -dist; ii<dist+1; ii++) {
                 for(int jj = -dist; jj<dist+1; jj++) { 
              if(Math.abs(jj)+Math.abs(ii)>dist) continue;   
@@ -154,7 +149,7 @@ public class WorldScreen implements Screen {
                 }
             
             
-              dist =  getPlayerCharGroup().getCurrentSelected().getCurrentRange();
+              dist =  getPlayerGroup().getCurrentSelected().getCurrentRange();
             for(int ii = -dist; ii<dist+1; ii++) {
                 for(int jj = -dist; jj<dist+1; jj++) { 
              if(Math.abs(jj)+Math.abs(ii)!=dist) continue;   
@@ -163,7 +158,7 @@ public class WorldScreen implements Screen {
                     }
                 }
          }
-        getPlayerCharGroup().draw(g, v);
+        getPlayerGroup().draw(g, v);
         this.target.draw(g, v);
     }
     
@@ -179,7 +174,7 @@ public class WorldScreen implements Screen {
         g.fillRect(0, 0, v.getTileSize()*v.getWidthInTiles(), v.getTileSize()*2);
         g.setColor(Color.black);
         g.drawRect(0, 0, v.getTileSize()*v.getWidthInTiles(), v.getTileSize()*2);
-        g.drawString(this.playerCharGroup.getCurrentSelected().menuDisplay(), 0, 20);
+        g.drawString(this.playerGroup.getCurrentSelected().menuDisplay(), 0, 20);
         
         /*
          * Universal Icons
@@ -192,7 +187,7 @@ public class WorldScreen implements Screen {
          * Character specific skill icons
          */
         g.translate(v.getTileSize()*3, v.getTileSize());
-        playerCharGroup.getCurrentSelected().drawSkillMenu(g, v);
+        playerGroup.getCurrentSelected().drawSkillMenu(g, v);
         g.translate(-v.getTileSize()*3, -v.getTileSize());
         g.translate(0, -v.getTileSize()*(v.getHeightInTiles()-bh));
     }
@@ -221,7 +216,7 @@ public class WorldScreen implements Screen {
                 /*
                  * This will look better once it will be a Hash with an ID
                  */
-            Unit temp = this.playerCharGroup.getUnitByName(occupant);
+            Unit temp = this.playerGroup.getUnitByName(occupant);
             if(temp!=null)
                 temp.drawHealthbar(g, v);
             }
@@ -246,15 +241,15 @@ public class WorldScreen implements Screen {
     /**
      * @return the playerCharGroup
      */
-    public UnitGroup getPlayerCharGroup() {
-        return playerCharGroup;
+    public UnitGroup getPlayerGroup() {
+        return playerGroup;
     }
 
     /**
      * @param playerCharGroup the playerCharGroup to set
      */
-    public void setPlayerCharGroup(UnitGroup playerCharGroup) {
-        this.playerCharGroup = playerCharGroup;
+    public void setPlayerGroup(UnitGroup playerCharGroup) {
+        this.playerGroup = playerCharGroup;
     }
 
     /**

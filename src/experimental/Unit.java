@@ -400,5 +400,27 @@ public abstract class Unit {
     
     teleportUnit(newy, newx, w);
     }
+
+    /*
+     * Attacks the target
+     */
+    void attack(Unit target, WorldScreen w) {
+         if(canHit(target, w)) {  
+                         setActionPoints(0);
+                         target.modifyHealth(-1);
+                         if(target.getCurrentHealth()<=0)
+                         target.procSkill(w, SkillProcEnum.onDeath);
+            }
+    }
+
+    /*
+     * Procs Skills
+     */
+    private void procSkill(WorldScreen w, SkillProcEnum sProc) {
+       // target.respawn(w);
+        if(this.skillList.isEmpty()) return;
+        for(int i = 0; i<this.skillList.size(); i++)
+            if(skillList.get(i).getProc()==sProc) skillList.get(i).useSkill(this, w);
+    }
     
 }

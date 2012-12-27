@@ -15,7 +15,9 @@ public class TargetUnit extends Unit {
    
         TargetUnit(String name, int y, int x)
     {
-    super(name, y, x);  
+    super(name, y, x); 
+    
+    this.getSkillList().add(new Skill("Respawn")); 
     }
     
     

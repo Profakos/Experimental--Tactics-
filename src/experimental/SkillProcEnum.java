@@ -8,8 +8,6 @@ package experimental;
  *
  * @author Akos
  */
-public enum SkillSettingEnum {
-    callfunction,
-    image,
-    proc
+public enum SkillProcEnum {
+    onDeath
 }

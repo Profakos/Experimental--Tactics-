@@ -16,7 +16,9 @@ public class Skill {
     private String name;
     private String image;
     
+    private SkillProcEnum proc;
     private UnitFunctionEnum calledFunctionEnum;
+    
     /*
      * Constructor
      */
@@ -38,6 +40,7 @@ public class Skill {
                 break;
             case image: image = sklist.get(ii).getSetting();
                 break;
+            case proc: proc = SkillProcEnum.valueOf(sklist.get(ii).getSetting());;
             default: break;
             }
         }
@@ -56,6 +59,7 @@ public class Skill {
                 break;
             case randomPort: user.randomPort(w);
                 break;
+            case respawn: user.respawn(w);
         }  
    
     }
@@ -100,6 +104,20 @@ public class Skill {
      */
     public void setCalledFunctionEnum(UnitFunctionEnum calledFunctionEnum) {
         this.calledFunctionEnum = calledFunctionEnum;
+    }
+
+    /**
+     * @return the proc
+     */
+    public SkillProcEnum getProc() {
+        return proc;
+    }
+
+    /**
+     * @param proc the proc to set
+     */
+    public void setProc(SkillProcEnum proc) {
+        this.proc = proc;
     }
     
      

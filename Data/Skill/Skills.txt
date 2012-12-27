@@ -4,3 +4,7 @@ callfunction	randomPort
 NEWSKILL	Transform
 image	CHANGE_Icon
 callfunction	transformToAlternate
+NEWSKILL	Respawn
+image	.
+callfunction	respawn
+proc	onDeath

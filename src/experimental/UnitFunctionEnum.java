@@ -14,5 +14,6 @@ package experimental;
  */
 public enum UnitFunctionEnum {
     transformToAlternate,
-    randomPort
+    randomPort,
+    respawn
 }

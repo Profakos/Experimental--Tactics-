@@ -8,3 +8,17 @@ NEWSKILL	Respawn
 image	.
 callfunction	respawn
 proc	onDeath
+NEWSKILL	Heal
+image	heal_Icon
+damage	-1
+affectAllies	true
+affectCaster	true
+NEWSKILL	Explode
+image	explode_Icon
+damage	2
+radius	1
+NEWSKILL	Deadsplode
+image	..
+proc	onDeath
+damage	2
+radius	1

@@ -10,9 +10,14 @@ package experimental;
  */
 public class SimpleUnit extends Unit{
     
-    SimpleUnit(String name, int ly, int lx) {
-    super(name, ly, lx);
+    SimpleUnit(String name, int ly, int lx, int teamNumber) {
+    super(name, ly, lx, teamNumber);
     
-    this.getSkillList().add(new Skill("RandomPort")); 
+    Skill temp = SkillFactory.makeSkill("RandomPort");
+    this.getSkillList().add(temp); 
+    Skill temp1 = SkillFactory.makeSkill("Heal");
+    this.getSkillList().add(temp1); 
+    Skill temp2 = SkillFactory.makeSkill("Explode");
+    this.getSkillList().add(temp2);  
     }
 }

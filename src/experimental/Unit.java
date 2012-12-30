@@ -31,12 +31,15 @@ public abstract class Unit {
     private int currentHealth;
     private int maxHealth;
     
+    private int teamNumber;
+    
     private List<Skill> skillList;
     
-    Unit(String name, int lY, int lX)
+    Unit(String name, int lY, int lX, int teamNumber)
     {
     this.name = name;
     this.image = name;
+    this.teamNumber = teamNumber;
     
     this.locationY = lY;
     this.locationX = lX;
@@ -421,6 +424,20 @@ public abstract class Unit {
         if(this.skillList.isEmpty()) return;
         for(int i = 0; i<this.skillList.size(); i++)
             if(skillList.get(i).getProc()==sProc) skillList.get(i).useSkill(this, w);
+    }
+
+    /**
+     * @return the teamNumber
+     */
+    public int getTeamNumber() {
+        return teamNumber;
+    }
+
+    /**
+     * @param teamNumber the teamNumber to set
+     */
+    public void setTeamNumber(int teamNumber) {
+        this.teamNumber = teamNumber;
     }
     
 }

@@ -11,5 +11,9 @@ package experimental;
 public enum SkillSettingEnum {
     callfunction,
     image,
-    proc
+    proc,
+    radius,
+    damage,
+    affectCaster,
+    affectAllies
 }

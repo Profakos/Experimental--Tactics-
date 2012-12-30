@@ -15,8 +15,8 @@ import java.util.Random;
 public class WorldScreen implements Screen {
     
     private TileMap tmap;
+    private UnitGroup enemyGroup;
     private UnitGroup playerGroup;
-    private TargetUnit target;
     private Random rgen;
     private int bottomMenuHeight;
     
@@ -27,16 +27,25 @@ public class WorldScreen implements Screen {
         rgen = new Random(); 
         bottomMenuHeight = 2; 
         tmap = new TileMap(15,15);  
-        playerGroup = new UnitGroup();
+        playerGroup = new UnitGroup(0);
+        enemyGroup = new UnitGroup(1);
     
-        for(int index = 0; index<playerGroup.getUnits().size(); index++) {
-            tmap.getTile(playerGroup.getUnits().get(index).getLocationY(), 
-            playerGroup.getUnits().get(index).getLocationX()).setOccupiedPerson(true,
-            playerGroup.getUnits().get(index).getName());
+        /*
+         * duplicate code, should be collapsed
+         */
+        for(Unit u: playerGroup.getUnits().values()) {
+            tmap.getTile(u.getLocationY(), 
+            u.getLocationX()).setOccupiedPerson(true,
+            u.getName());
+        }
+        
+         for(Unit u: enemyGroup.getUnits().values()) {
+            tmap.getTile(u.getLocationY(), 
+            u.getLocationX()).setOccupiedPerson(true,
+            u.getName());
         }
     
-        target = new TargetUnit("target", 5, 5);
-        tmap.getTile(5,5).setOccupiedPerson(true, "target");
+        
     }
 
     /*
@@ -90,14 +99,15 @@ public class WorldScreen implements Screen {
                 playerGroup.moveUnit(cy + v.getOffY(), cx + v.getOffX(), this);
               }
           else {
-                if(tmap.getTile(cy + v.getOffY(), cx + v.getOffX())
-                        .getOccupName().equals(target.getName())) {
+              String tname = tmap.getTile(cy + v.getOffY(), cx + v.getOffX())
+                        .getOccupName();
+                if(enemyGroup.containsUnit(tname)){
                      if(playerGroup.getCurrentSelected().getActionPoints()==0) 
                          return;
                      /*
                       * TODO: move this to an attack function
                       */
-                    playerGroup.getCurrentSelected().attack(target, this);
+                    playerGroup.getCurrentSelected().attack(enemyGroup.getUnit(tname), this);
                  }
               }
      }
@@ -159,7 +169,7 @@ public class WorldScreen implements Screen {
                 }
          }
         getPlayerGroup().draw(g, v);
-        this.target.draw(g, v);
+        getEnemyGroup().draw(g, v);
     }
     
      
@@ -210,16 +220,15 @@ public class WorldScreen implements Screen {
             */
             if(tmap.getTile(cy+v.getOffY(), cx+v.getOffX()).isOccupied()==true) {
             String occupant = tmap.getTile(cy+v.getOffY(), cx+v.getOffX()).getOccupName();
-            if(occupant.equals(target.getName())) 
-            target.drawHealthbar(g, v);
+            
+            
+            
+            if(playerGroup.containsUnit(occupant)) 
+                        playerGroup.getUnit(occupant).drawHealthbar(g, v); 
             else {
-                /*
-                 * This will look better once it will be a Hash with an ID
-                 */
-            Unit temp = this.playerGroup.getUnitByName(occupant);
-            if(temp!=null)
-                temp.drawHealthbar(g, v);
-            }
+            if(enemyGroup.containsUnit(occupant)) 
+                        enemyGroup.getUnit(occupant).drawHealthbar(g, v); 
+            } 
          }
          
          }
@@ -292,6 +301,22 @@ public class WorldScreen implements Screen {
      */
     public void setBottomMenuHeight(int bottomMenuHeight) {
         this.bottomMenuHeight = bottomMenuHeight;
+    }
+
+ 
+
+    /**
+     * @return the enemyGroup
+     */
+    public UnitGroup getEnemyGroup() {
+        return enemyGroup;
+    }
+
+    /**
+     * @param enemyGroup the enemyGroup to set
+     */
+    public void setEnemyGroup(UnitGroup enemyGroup) {
+        this.enemyGroup = enemyGroup;
     }
 
 }

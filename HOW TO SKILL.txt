@@ -1,4 +1,8 @@
-NEWSKILL	name //There can be only one name
-image	imagename //There can be only one image
-[callfunction	(transformToAlternate | randomPort)]  //There can be only one called function [this might change]
-[proc (ondeath)]
+NEWSKILL	name  
+image	imagename  // default ""
+callfunction	(transformToAlternate | randomPort)
+proc (ondeath)  
+radius int //default: 0, otherwise it is an AoE skill
+affectCaster	boolean//if it can affect the caster, default 0
+affectAllies boolean //deafault false
+damage int //default: 0

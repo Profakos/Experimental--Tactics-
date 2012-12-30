@@ -4,65 +4,22 @@
  */
 package experimental;
 
-import java.util.List;
-
-
 /**
  *
  * @author Akos
  */
-public class Skill {
-
+abstract public class Skill {
+    
     private String name;
     private String image;
-    
     private SkillProcEnum proc;
-    private UnitFunctionEnum calledFunctionEnum;
     
-    /*
-     * Constructor
-     */
-    Skill (String name) {
-      
+    Skill(String name)    {
         this.name = name;
         this.image = "";
-        
-        calledFunctionEnum = null;
-        
-        List<SkillSetting> sklist = SkillRegistry.getSkillHash().get(name);
-        
-        if(sklist == null || sklist.isEmpty()) return;
-        
-        for(int ii = 0; ii<sklist.size(); ii++)
-        {
-        switch(sklist.get(ii).getSettingType()){
-            case callfunction : calledFunctionEnum = UnitFunctionEnum.valueOf(sklist.get(ii).getSetting());
-                break;
-            case image: image = sklist.get(ii).getSetting();
-                break;
-            case proc: proc = SkillProcEnum.valueOf(sklist.get(ii).getSetting());;
-            default: break;
-            }
-        }
-        
+        this.proc = null;
     }
-    
-    /*
-     * Using the skill
-     */
-    void useSkill(Unit user, WorldScreen w) {
-        
-        if(getCalledFunctionEnum()!=null)
-        switch(getCalledFunctionEnum())
-        {
-            case transformToAlternate: user.transformToAlternate(); 
-                break;
-            case randomPort: user.randomPort(w);
-                break;
-            case respawn: user.respawn(w);
-        }  
-   
-    }
+    abstract void useSkill(Unit user, WorldScreen w);
 
     /**
      * @return the name
@@ -93,20 +50,6 @@ public class Skill {
     }
 
     /**
-     * @return the calledFunctionEnum
-     */
-    public UnitFunctionEnum getCalledFunctionEnum() {
-        return calledFunctionEnum;
-    }
-
-    /**
-     * @param calledFunctionEnum the calledFunctionEnum to set
-     */
-    public void setCalledFunctionEnum(UnitFunctionEnum calledFunctionEnum) {
-        this.calledFunctionEnum = calledFunctionEnum;
-    }
-
-    /**
      * @return the proc
      */
     public SkillProcEnum getProc() {
@@ -121,7 +64,4 @@ public class Skill {
     }
     
      
-    
-    
-    
 }

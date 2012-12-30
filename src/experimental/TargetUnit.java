@@ -13,11 +13,15 @@ import java.awt.Graphics;
 public class TargetUnit extends Unit {
 
    
-        TargetUnit(String name, int y, int x)
+        TargetUnit(String name, int y, int x, int teamNumber)
     {
-    super(name, y, x); 
+    super(name, y, x, teamNumber); 
     
-    this.getSkillList().add(new Skill("Respawn")); 
+   // this.getSkillList().add(new Skill("Deadsplode"));
+    Skill temp = SkillFactory.makeSkill("Respawn");
+    this.getSkillList().add(temp); 
+    this.setMaxHealth(4);
+    this.setCurrentHealth(4);
     }
     
     

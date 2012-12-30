@@ -6,6 +6,7 @@ package experimental;
 
 import java.awt.Graphics;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -14,26 +15,41 @@ import java.util.List;
  */
 public class UnitGroup {
     
+    private List<String> names;
     
-    private List<Unit> units;
+    private HashMap<String, Unit> units;
     private int current = 0; 
     
+    private int teamNumber;
     /*
      * Constructor
      */
-    UnitGroup() {
-    units = new ArrayList<>();    
+    UnitGroup(int teamNumber) {
+    this.teamNumber = teamNumber;
+    units = new HashMap<>();    
+    if(teamNumber==0){
    // units.add(new TagteamUnit("alpha", "sound", false, "clean", false, 0, 0));
    // units.add(new TagteamUnit("beta", "tech", true, "water", true, 0, 1));
-    units.add(new TagteamUnit("gamma","blood", false, "ghost", true, 0, 2));
-    units.add(new SimpleUnit("carp", 0, 1));
+    units.put("gamma", new TagteamUnit("gamma","blood", false, "ghost", true, 0, 2, teamNumber));
+    units.put("carp", new SimpleUnit("carp", 0, 1, teamNumber));
     }
+    else {
+        units.put("target", new TargetUnit("target", 5, 5, teamNumber));
+        }
+    
+    names = new ArrayList<>();
+    
+    if(!units.isEmpty()) {
+        names.addAll(units.keySet());
+        }
+    }
+    
     
     /*
      * @return the currently active player character
      */
     Unit getCurrentSelected() {  
-        return getUnits().get(current); 
+        return getUnits().get(names.get(current)); 
     }
 
     /*
@@ -42,26 +58,29 @@ public class UnitGroup {
     void draw(Graphics g, Viewport v) {
         
          g.drawImage(ImageRegistry.getImage("selectedChar"), 
-                 (getUnits().get(getCurrent()).getLocationX()-v.getOffX())*v.getTileSize(),
-                 (getUnits().get(getCurrent()).getLocationY()-v.getOffY())*v.getTileSize(), null);
+                 (getCurrentSelected().getLocationX()-v.getOffX())*v.getTileSize(),
+                 (getCurrentSelected().getLocationY()-v.getOffY())*v.getTileSize(), null);
          
-         
-        for(int index = 0; index<getUnits().size(); index++) {
-            getUnits().get(index).draw(g, v);
+        
+        for(int index = 0; index<getNames().size(); index++) {
+            getUnits().get(names.get(index)).draw(g, v);
         }
           
+    }
+    
+    /*
+     * @return if the unit exists in this team
+     */
+    boolean containsUnit(String name) {
+        return getUnits().containsKey(name); 
     }
     
     /*
      * @return a unit based on their name
      * TODO: this will need a unique id based rewrite
      */
-    Unit getUnitByName(String name) {
-    for(int ii = 0; ii<this.units.size(); ii++) {
-        if(this.units.get(ii).getName().equals(name)) 
-            return this.units.get(ii);
-        }
-    return null;
+    Unit getUnit(String name) {
+     return getUnits().get(name);
     }
     
     /*
@@ -69,8 +88,8 @@ public class UnitGroup {
      */
     void update(WorldScreen w)
     {
-    for(int ii = 0; ii<this.units.size(); ii++) {
-            this.units.get(ii).update(w);
+    for(int ii = 0; ii<this.getUnits().size(); ii++) {
+            getUnits().get(names.get(ii)).update(w);
         } 
     }
 
@@ -80,9 +99,9 @@ public class UnitGroup {
     void prevnextUnit(int dir) {
         setCurrent(getCurrent() + dir);
         if( getCurrent()<0)
-            setCurrent(getUnits().size() - 1);
+            setCurrent(getNames().size() - 1);
         else 
-            setCurrent(getCurrent() % getUnits().size());
+            setCurrent(getCurrent() % getNames().size());
     }
 
     /*
@@ -92,19 +111,7 @@ public class UnitGroup {
         getCurrentSelected().moveCommand(y,x,w);
     }
 
-    /**
-     * @return the units
-     */
-    public List<Unit> getUnits() {
-        return units;
-    }
-
-    /**
-     * @param units the units to set
-     */
-    public void setUnits(List<Unit> units) {
-        this.units = units;
-    }
+ 
 
     /**
      * @return the current
@@ -118,6 +125,48 @@ public class UnitGroup {
      */
     public void setCurrent(int current) {
         this.current = current;
+    }
+
+    /**
+     * @return the team
+     */
+    public int getTeamNumber() {
+        return teamNumber;
+    }
+
+    /**
+     * @param team the team to set
+     */
+    public void setTeamNumber(int team) {
+        this.teamNumber = team;
+    }
+
+    /**
+     * @return the names
+     */
+    public List<String> getNames() {
+        return names;
+    }
+
+    /**
+     * @param names the names to set
+     */
+    public void setNames(List<String> names) {
+        this.names = names;
+    }
+
+    /**
+     * @return the units
+     */
+    public HashMap<String, Unit> getUnits() {
+        return units;
+    }
+
+    /**
+     * @param units the units to set
+     */
+    public void setUnits(HashMap<String, Unit> units) {
+        this.units = units;
     }
     
 }

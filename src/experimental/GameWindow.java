@@ -73,18 +73,20 @@ class GameWindow extends Frame {
     }
 
     /**
-     * @return the skills
+     * @return the skillFactory
      */
-    public SkillRegistry getSkills() {
-        return skills;
+    public SkillFactory getSkillFactory() {
+        return skillFactory;
     }
 
     /**
-     * @param skills the skills to set
+     * @param skillFactory the skillFactory to set
      */
-    public void setSkills(SkillRegistry skills) {
-        this.skills = skills;
+    public void setSkillFactory(SkillFactory skillFactory) {
+        this.skillFactory = skillFactory;
     }
+
+ 
     
     /*
      * WindowAdapter inner class
@@ -159,7 +161,7 @@ class GameWindow extends Frame {
     Panel gamepanel;
     
     private ImageRegistry images;
-    private SkillRegistry skills;
+    private SkillFactory skillFactory;
     
     private GameCanvas canvas;
     private WorldScreen world;
@@ -206,7 +208,7 @@ class GameWindow extends Frame {
     private void init() { 
         
         setImages(new ImageRegistry());
-        setSkills(new SkillRegistry());
+        setSkillFactory(new SkillFactory());
         
         setWorld(new WorldScreen());
         

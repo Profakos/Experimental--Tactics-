@@ -19,15 +19,16 @@ public class TagteamUnit extends Unit{
      * Constructor
      */
     TagteamUnit(String name, String ch0, boolean ranged0, String ch1, 
-            boolean ranged1, int y, int x) {
-    super(name, y, x);   
+            boolean ranged1, int y, int x, int teamNumber) {
+    super(name, y, x, teamNumber);   
         
     characters = new TagComponentUnit[2];
-    characters[0] = new TagComponentUnit(ch0, ranged0);
-    characters[1] = new TagComponentUnit(ch1, ranged1);
+    characters[0] = new TagComponentUnit(ch0, ranged0, teamNumber);
+    characters[1] = new TagComponentUnit(ch1, ranged1, teamNumber);
     currentDominant = 0;
     
-    this.getSkillList().add(new Skill("Transform")); 
+    Skill temp = SkillFactory.makeSkill("Transform");
+    this.getSkillList().add(temp); 
     
     
     }

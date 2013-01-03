@@ -35,6 +35,9 @@ public abstract class Unit {
     
     private List<Skill> skillList;
     
+    private int silenceTimeLeft = 0;
+    private int doubledamageTimeLeft = 0;
+    
     Unit(String name, int lY, int lX, int teamNumber)
     {
     this.name = name;
@@ -77,12 +80,15 @@ public abstract class Unit {
      
      };
     
+     /*
+      * draws the skillsMenu of the unit
+      */
      void drawSkillMenu(Graphics g, Viewport v)
      {
      if(this.skillList.isEmpty()) return;    
      for(int ii = 0; ii<this.skillList.size(); ii++)
         {
-        g.drawImage(ImageRegistry.getImage(skillList.get(ii).getImage()), v.getTileSize()*ii, 0, null);
+        skillList.get(ii).drawSkillIcon(g, v, ii);
         }
      
      }
@@ -169,11 +175,14 @@ public abstract class Unit {
      /*
       * Uses a skill
       */
-      void useSkill(int i, WorldScreen w) {
-         if(getActionPoints()==0) return;    
-         if(i>=this.getSkillList().size()) return;
-         getSkillList().get(i).useSkill(this, w);
-         setActionPoints(0); 
+      void useSkill(int index, WorldScreen w) {
+         if(getActionPoints()==0 || getSilenceTimeLeft()>0) return;    
+         if(index<this.getSkillList().size() && getSkillList().get(index).getCooldownTimeLeft()==0)
+         {  
+             getSkillList().get(index).useSkill(this, w);
+             setActionPoints(0); 
+         }
+            
     }
       
     /*
@@ -190,8 +199,20 @@ public abstract class Unit {
     void update(WorldScreen w)
     {
     this.actionPoints = 2;
+    updateSkills();
+    
+    if(this.getSilenceTimeLeft()>0)
+    this.setSilenceTimeLeft(this.getSilenceTimeLeft()-1);
+    
+    if(this.getDoubledamageTimeLeft()>0)
+    this.setDoubledamageTimeLeft(this.getDoubledamageTimeLeft()-1);
     }
     
+    void updateSkills() {
+       for(int i = 0; i<this.skillList.size(); i++)    {
+        this.skillList.get(i).cooldownReset(false);
+    } 
+    }
     /**
      * @return the name
      */
@@ -294,7 +315,7 @@ public abstract class Unit {
     {
     this.setCurrentHealth(this.getCurrentHealth()+health);
     if(currentHealth>maxHealth) this.setCurrentHealth(this.getMaxHealth());
-    if(currentHealth<0) this.setCurrentHealth(0);
+    if(currentHealth<0) this.setCurrentHealth(0); 
     }
 
     /**
@@ -409,17 +430,24 @@ public abstract class Unit {
      */
     void attack(Unit target, WorldScreen w) {
          if(canHit(target, w)) {  
+             
                          setActionPoints(0);
+                         
+                         if(this.doubledamageTimeLeft==0)
                          target.modifyHealth(-1);
-                         if(target.getCurrentHealth()<=0)
-                         target.procSkill(w, SkillProcEnum.onDeath);
+                         else
+                         target.modifyHealth(-2);
+                         
+                         
+                        if(target.getCurrentHealth()<=0) 
+                        target.procSkill(w, SkillProcEnum.onDeath);
             }
     }
 
     /*
      * Procs Skills
      */
-    private void procSkill(WorldScreen w, SkillProcEnum sProc) {
+    public void procSkill(WorldScreen w, SkillProcEnum sProc) {
        // target.respawn(w);
         if(this.skillList.isEmpty()) return;
         for(int i = 0; i<this.skillList.size(); i++)
@@ -438,6 +466,34 @@ public abstract class Unit {
      */
     public void setTeamNumber(int teamNumber) {
         this.teamNumber = teamNumber;
+    }
+
+    /**
+     * @return the silenceTimeLeft
+     */
+    public int getSilenceTimeLeft() {
+        return silenceTimeLeft;
+    }
+
+    /**
+     * @param silenceTimeLeft the silenceTimeLeft to set
+     */
+    public void setSilenceTimeLeft(int silenceTimeLeft) {
+        this.silenceTimeLeft = silenceTimeLeft;
+    }
+
+    /**
+     * @return the doubledamageTimeLeft
+     */
+    public int getDoubledamageTimeLeft() {
+        return doubledamageTimeLeft;
+    }
+
+    /**
+     * @param doubledamageTimeLeft the doubledamageTimeLeft to set
+     */
+    public void setDoubledamageTimeLeft(int doubledamageTimeLeft) {
+        this.doubledamageTimeLeft = doubledamageTimeLeft;
     }
     
 }

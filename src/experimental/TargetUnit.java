@@ -18,8 +18,8 @@ public class TargetUnit extends Unit {
     super(name, y, x, teamNumber); 
     
    // this.getSkillList().add(new Skill("Deadsplode"));
-    Skill temp = SkillFactory.makeSkill("Respawn");
-    this.getSkillList().add(temp); 
+    this.getSkillList().add(SkillFactory.makeSkill("Respawn"));
+    
     this.setMaxHealth(4);
     this.setCurrentHealth(4);
     }

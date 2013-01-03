@@ -22,6 +22,16 @@ public class TagComponentUnit extends Unit {
        
        this.setBonusTileSpeed(ranged ? -2 : 0);
        this.setBonusRange(ranged ? 8 : 0);
+       
+       if(name.equals("blood")) {
+       this.getSkillList().add(SkillFactory.makeSkill("Heal"));
+       this.getSkillList().add(SkillFactory.makeSkill("Ignition")); 
+       }
+       if(name.equals("ghost")) {
+       this.getSkillList().add(SkillFactory.makeSkill("Revenge")); 
+       this.getSkillList().add(SkillFactory.makeSkill("Recall")); 
+       }
+       
     }
     
     /*
@@ -31,5 +41,8 @@ public class TagComponentUnit extends Unit {
         g.drawImage(ImageRegistry.getImage(getName() + "_Char"), 0, 0, 
         v.getTileSize(), v.getTileSize(), state*v.getTileSize(), 0, (state+1)*v.getTileSize(), 50, null);
     }
+    
+    
+ 
  
 }

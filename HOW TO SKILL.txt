@@ -1,8 +1,22 @@
-NEWSKILL	name  
+NEWSKILL	name  //IMPORTANT
+skillType [simple|composite] // IMPORTANT
 image	imagename  // default ""
-callfunction	(transformToAlternate | randomPort)
+callfunction	(transformToAlternate | randomPort | refreshSkills)
 proc (ondeath)  
+cooldown int //default 3
+
+
+
+CompositeSkill only
+
+componentSkill skillname
+
+Simple Skill Only
+
 radius int //default: 0, otherwise it is an AoE skill
 affectCaster	boolean//if it can affect the caster, default 0
 affectAllies boolean //deafault false
+affectEnemies boolean//default true
 damage int //default: 0
+silence int 
+doubleDamageTime int

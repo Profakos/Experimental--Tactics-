@@ -15,5 +15,6 @@ package experimental;
 public enum UnitFunctionEnum {
     transformToAlternate,
     randomPort,
-    respawn
+    respawn,
+    refreshSkills
 }

@@ -22,6 +22,10 @@ public class SimpleSkill extends Skill{
     
     private boolean affectAllies = false;
     private boolean affectCaster = true;
+    private boolean affectEnemies = true;
+    
+    private int silence = 0;
+    private int doubleDamageTime = 0;
       
     /*
      * Constructor
@@ -35,6 +39,9 @@ public class SimpleSkill extends Skill{
         List<SkillSetting> sklist = SkillDataRegistry.getSkillHash().get(name);
         
         if(sklist == null || sklist.isEmpty()) return;
+        
+        //no compostie inside a composite
+        if(sklist.get(0).getSetting().equals("composite")) return;
         
         for(int ii = 0; ii<sklist.size(); ii++)
         {
@@ -52,6 +59,14 @@ public class SimpleSkill extends Skill{
             case affectCaster: affectCaster = Boolean.valueOf(sklist.get(ii).getSetting());
                 break;
             case affectAllies: affectAllies = Boolean.valueOf(sklist.get(ii).getSetting());
+                break;
+            case affectEnemies: affectEnemies = Boolean.valueOf(sklist.get(ii).getSetting());
+                break;
+            case cooldown: this.setCooldown(Integer.valueOf(sklist.get(ii).getSetting()));
+                break;
+            case silence: silence = Integer.valueOf(sklist.get(ii).getSetting());
+                break;
+            case doubleDamageTime: doubleDamageTime = Integer.valueOf(sklist.get(ii).getSetting());
                 break;
             default: break;
             }
@@ -73,6 +88,9 @@ public class SimpleSkill extends Skill{
             case randomPort: user.randomPort(w);
                 break;
             case respawn: user.respawn(w);
+                break;
+            case refreshSkills: user.updateSkills();
+                break;
         } 
         
         String tempname;
@@ -82,43 +100,53 @@ public class SimpleSkill extends Skill{
                 if(ii+user.getLocationX()<0 || jj+user.getLocationY()<0 || 
                         ii+user.getLocationX()>=w.getTmap().getWidthInTiles() ||
                         jj+user.getLocationY()>=w.getTmap().getHeightInTiles()) continue;
-               /*
-                * Placeholder solution, ugh, so ugly
-                */
+              
                 
              tempname = w.getTmap().getTile(jj+user.getLocationY(), ii+user.getLocationX())
                         .getOccupName();
              if(tempname.equals("")) continue;
              
              if(tempname.equals(user.getName()) && this.affectCaster) {
-                 user.modifyHealth(-damage);
+                 this.affectUnit(user, w);
                  continue;
              }
              
-             /* TODO
-              * Will need to make this more compact
+             /* 
+              * TODO  Will need to make this more compact
               */
              if(w.getPlayerGroup().containsUnit(tempname)) {
                  if(user.getTeamNumber()==w.getPlayerGroup().getTeamNumber()
                          && affectAllies==false)
                      continue;
-                 w.getPlayerGroup().getUnit(tempname).modifyHealth(-damage);
+                 
+                 this.affectUnit( w.getPlayerGroup().getUnit(tempname), w);  
+                 
                  continue;
              }
              
              if(w.getEnemyGroup().containsUnit(tempname)) {
                  if(user.getTeamNumber()==w.getEnemyGroup().getTeamNumber()
-                       &&  affectAllies==false)
+                       &&  affectEnemies==false)
                      continue;
-                 w.getEnemyGroup().getUnit(tempname).modifyHealth(-damage);
+             this.affectUnit( w.getEnemyGroup().getUnit(tempname), w);  
                  continue;
              }
              
             }
         }
-        
+        this.cooldownReset(true);
     }
     
+    /*
+     * affects a creature
+     */
+    void    affectUnit(Unit u, WorldScreen w)  {
+             u.setSilenceTimeLeft(this.getSilence());
+             u.setDoubledamageTimeLeft(this.getDoubleDamageTime());
+             u.modifyHealth(-damage);
+             if(u.getCurrentHealth()<=0) 
+                 u.procSkill(w, SkillProcEnum.onDeath);
+    }
 
     /**
      * @return the calledFunctionEnum
@@ -174,6 +202,34 @@ public class SimpleSkill extends Skill{
      */
     public void setAffectCaster(boolean affectCaster) {
         this.affectCaster = affectCaster;
+    }
+
+    /**
+     * @return the silence
+     */
+    public int getSilence() {
+        return silence;
+    }
+
+    /**
+     * @param silence the silence to set
+     */
+    public void setSilence(int silence) {
+        this.silence = silence;
+    }
+
+    /**
+     * @return the doubleDamageTime
+     */
+    public int getDoubleDamageTime() {
+        return doubleDamageTime;
+    }
+
+    /**
+     * @param doubleDamageTime the doubleDamageTime to set
+     */
+    public void setDoubleDamageTime(int doubleDamageTime) {
+        this.doubleDamageTime = doubleDamageTime;
     }
     
      

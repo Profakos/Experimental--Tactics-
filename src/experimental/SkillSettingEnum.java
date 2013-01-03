@@ -15,5 +15,11 @@ public enum SkillSettingEnum {
     radius,
     damage,
     affectCaster,
-    affectAllies
+    affectAllies,
+    affectEnemies,
+    skillType,
+    componentSkill,
+    cooldown,
+    silence,
+    doubleDamageTime
 }

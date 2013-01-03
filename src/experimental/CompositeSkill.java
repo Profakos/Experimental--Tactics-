@@ -22,6 +22,26 @@ public class CompositeSkill extends Skill{
     CompositeSkill(String name)    {
        super(name);
        componentSkills = new ArrayList<>();
+       
+        List<SkillSetting> sklist = SkillDataRegistry.getSkillHash().get(name);
+        if(sklist == null || sklist.isEmpty()) return;
+        
+        for(int ii = 0; ii<sklist.size(); ii++)
+        {
+        switch(sklist.get(ii).getSettingType()){
+            case image: setImage(sklist.get(ii).getSetting());
+                break;
+            case proc: setProc(SkillProcEnum.valueOf(sklist.get(ii).getSetting()));
+                break;
+            case componentSkill: componentSkills.add(new SimpleSkill(sklist.get(ii).getSetting()));
+                break;
+            case cooldown: this.setCooldown(Integer.valueOf(sklist.get(ii).getSetting()));
+                break;
+            default: break;
+            }
+        }
+        
+        this.cooldownReset(true);
     }
     
     @Override
@@ -32,6 +52,8 @@ public class CompositeSkill extends Skill{
         for(int ii = 0; ii<componentSkills.size(); ii++)    {
             componentSkills.get(ii).useSkill(user, w);
         }
+        
+        this.cooldownReset(true);
     }
 
 

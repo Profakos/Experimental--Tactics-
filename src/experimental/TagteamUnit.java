@@ -30,7 +30,6 @@ public class TagteamUnit extends Unit{
     Skill temp = SkillFactory.makeSkill("Transform");
     this.getSkillList().add(temp); 
     
-    
     }
 
     /*
@@ -46,6 +45,56 @@ public class TagteamUnit extends Unit{
     }
     
      
+       @Override
+       void drawSkillMenu(Graphics g, Viewport v)
+     {
+     if(getSkillList().isEmpty()) return;    
+     for(int ii = 0; ii<getSkillList().size(); ii++)
+        {
+              getSkillList().get(ii).drawSkillIcon(g, v, ii);
+
+        }
+     
+     g.translate(v.getTileSize()*getSkillList().size(), 0);
+     characters[(currentDominant+1)%2].drawSkillMenu(g, v);
+     g.translate(-v.getTileSize()*getSkillList().size(), 0);
+     
+     }
+       
+      /*
+      * Uses a skill
+      */
+    @Override
+      void useSkill(int index, WorldScreen w) {
+         if(getActionPoints()==0 || getSilenceTimeLeft()>0) return;    
+         if(index<this.getSkillList().size() && getSkillList().get(index).getCooldownTimeLeft()==0) 
+         getSkillList().get(index).useSkill(this, w);
+         else   {   
+             if(index-this.getSkillList().size()>=characters[(currentDominant+1)%2].getSkillList().size())
+                 return;
+           
+           
+           if(characters[(currentDominant+1)%2].getSkillList().get(index-this.getSkillList().size())
+                   .getCooldownTimeLeft()!=0)
+               return;  
+             
+           characters[(currentDominant+1)%2].getSkillList().get(index-this.getSkillList().size()).useSkill(this, w);
+         }
+         
+         
+         setActionPoints(0); 
+         
+    }
+    
+    @Override
+    void updateSkills()
+    {
+     for(int i = 0; i<this.getSkillList().size(); i++)    {
+        this.getSkillList().get(i).cooldownReset(false); 
+    }
+        this.characters[0].updateSkills();
+        this.characters[1].updateSkills(); 
+    }
 
     /*
      * The Dominant character and his or her weapon changes place

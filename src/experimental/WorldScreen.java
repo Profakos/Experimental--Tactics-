@@ -104,16 +104,14 @@ public class WorldScreen implements Screen {
                 if(enemyGroup.containsUnit(tname)){
                      if(playerGroup.getCurrentSelected().getActionPoints()==0) 
                          return;
-                     /*
-                      * TODO: move this to an attack function
-                      */
+                     
                     playerGroup.getCurrentSelected().attack(enemyGroup.getUnit(tname), this);
                  }
               }
      }
     
      /*
-      * Clicked on the Menu half
+      * Clicked on the Menu
       */
     private void clickMenu(int cy, int cx, Viewport v) {
       if(cy==v.getHeightInTiles()-1)

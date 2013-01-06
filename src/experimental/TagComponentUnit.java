@@ -18,7 +18,7 @@ public class TagComponentUnit extends Unit {
      * Constructor
      */
     TagComponentUnit(String name, boolean ranged, int teamNumber) {
-       super(name, -1, -1, teamNumber);
+       super(name, name, -1, -1, teamNumber);
        
        this.setBonusTileSpeed(ranged ? -2 : 0);
        this.setBonusRange(ranged ? 8 : 0);

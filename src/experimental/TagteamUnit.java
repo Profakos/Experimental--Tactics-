@@ -20,7 +20,7 @@ public class TagteamUnit extends Unit{
      */
     TagteamUnit(String name, String ch0, boolean ranged0, String ch1, 
             boolean ranged1, int y, int x, int teamNumber) {
-    super(name, y, x, teamNumber);   
+    super(name, "", y, x, teamNumber);   
         
     characters = new TagComponentUnit[2];
     characters[0] = new TagComponentUnit(ch0, ranged0, teamNumber);

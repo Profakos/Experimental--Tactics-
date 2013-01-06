@@ -86,6 +86,20 @@ class GameWindow extends Frame {
         this.skillFactory = skillFactory;
     }
 
+    /**
+     * @return the timer2
+     */
+    public Timer getTimer2() {
+        return timer2;
+    }
+
+    /**
+     * @param timer2 the timer2 to set
+     */
+    public void setTimer2(Timer timer2) {
+        this.timer2 = timer2;
+    }
+
  
     
     /*
@@ -96,6 +110,7 @@ class GameWindow extends Frame {
         @Override
            public void windowClosing(WindowEvent e) { 
            getTimer1().stop();
+           getTimer2().stop();
            Window ee = e.getWindow(); 
            ee.dispose();
          }
@@ -147,13 +162,21 @@ class GameWindow extends Frame {
     }
      
      /*
-      * ActionListener innerclass for the timer
+      * ActionListener innerclasses for the timers
       */
-         class TimerListener implements ActionListener {
+         class DisplayTimerListener implements ActionListener {
 
         @Override
         public void actionPerformed(ActionEvent e) {
-             update();
+             updateDisplay();
+        }
+    }
+         
+       class UpdateTimerListener implements ActionListener {
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+             updateModel();
         }
     }
     
@@ -167,6 +190,7 @@ class GameWindow extends Frame {
     private WorldScreen world;
     
     private Timer timer1;
+    private Timer timer2;
     
     /*
      * Constructor
@@ -212,7 +236,8 @@ class GameWindow extends Frame {
         
         setWorld(new WorldScreen());
         
-        setTimer1(new Timer(100, new TimerListener()));  
+        setTimer1(new Timer(100, new DisplayTimerListener()));  
+        setTimer2(new Timer(500, new UpdateTimerListener()));  
     }
     
     /*
@@ -220,13 +245,14 @@ class GameWindow extends Frame {
      */
     private void run(){ 
         getTimer1().start();
+        getTimer2().start();
     }
     
     
     /*
      * Updates the world, redraws the screen
      */
-    void update() {
+    void updateDisplay() {
          
      if(getCanvas().getMousePosition()!=null) {
             getCanvas().setCurx(getCanvas().getMousePosition().x);
@@ -238,6 +264,10 @@ class GameWindow extends Frame {
        }
      
       getCanvas().repaint();
+    }
+    
+    void updateModel() {
+        this.getWorld().update();
     }
     
 }

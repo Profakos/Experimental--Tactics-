@@ -38,10 +38,10 @@ public abstract class Unit {
     private int silenceTimeLeft = 0;
     private int doubledamageTimeLeft = 0;
     
-    Unit(String name, int lY, int lX, int teamNumber)
+    Unit(String name, String image, int lY, int lX, int teamNumber)
     {
     this.name = name;
-    this.image = name;
+    this.image = image;
     this.teamNumber = teamNumber;
     
     this.locationY = lY;
@@ -198,6 +198,8 @@ public abstract class Unit {
      */
     void update(WorldScreen w)
     {
+    if(this.getCurrentHealth()<=0) return;
+    
     this.actionPoints = 2;
     updateSkills();
     
@@ -494,6 +496,11 @@ public abstract class Unit {
      */
     public void setDoubledamageTimeLeft(int doubledamageTimeLeft) {
         this.doubledamageTimeLeft = doubledamageTimeLeft;
+    }
+
+    void think(WorldScreen w) {
+       moveCommand(getLocationY()+w.getRgen().nextInt(3)-1, 
+               getLocationX()+w.getRgen().nextInt(3)-1, w);
     }
     
 }

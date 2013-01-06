@@ -18,8 +18,12 @@ public class WorldScreen implements Screen {
     private UnitGroup enemyGroup;
     private UnitGroup playerGroup;
     private Random rgen;
-    private int bottomMenuHeight;
+    private int bottomMenuHeight = 0;
+    private int topMenuHeight = 0;
+    private int leftMenuWidth = 0;
+    private int rightMenuWidth = 0;
     
+    private int currentGroup = 0;
    /*
     * Constructor
     */ 
@@ -29,6 +33,8 @@ public class WorldScreen implements Screen {
         tmap = new TileMap(15,15);  
         playerGroup = new UnitGroup(0);
         enemyGroup = new UnitGroup(1);
+        
+        
     
         /*
          * duplicate code, should be collapsed
@@ -71,6 +77,12 @@ public class WorldScreen implements Screen {
           int cx = v.getCx()/v.getTileSize();
           
           /*
+          if(currentGroup==1)   {
+              currentGroup=0;
+              playerGroup.update(this);
+              return;
+          }*/
+          /*
            * if(clicked on playfield)
            * 
            * else clicked on menu
@@ -86,7 +98,7 @@ public class WorldScreen implements Screen {
        }  
         
     }
-    
+     
     /*
      * Clicked on the playingField half
      */
@@ -120,7 +132,9 @@ public class WorldScreen implements Screen {
                 break;
                 case (1): playerGroup.prevnextUnit(1); 
                 break;
-                case (2): playerGroup.update(this); break;
+                case (2): currentGroup = 1;
+                    enemyGroup.update(this); 
+                    break;
                 default: 
                     if(cx>=3) { 
                         playerGroup.getCurrentSelected().useSkill(cx-3, this); 
@@ -168,6 +182,17 @@ public class WorldScreen implements Screen {
          }
         getPlayerGroup().draw(g, v);
         getEnemyGroup().draw(g, v);
+        
+        if(currentGroup==0)
+        g.drawImage(ImageRegistry.getImage("selectedChar"), 
+                 (getPlayerGroup().getCurrentSelected().getLocationX()-v.getOffX())*v.getTileSize(),
+                 (getPlayerGroup().getCurrentSelected().getLocationY()-v.getOffY())*v.getTileSize(), null);
+        else
+        g.drawImage(ImageRegistry.getImage("selectedChar"), 
+                 (getEnemyGroup().getCurrentSelected().getLocationX()-v.getOffX())*v.getTileSize(),
+                 (getEnemyGroup().getCurrentSelected().getLocationY()-v.getOffY())*v.getTileSize(), null);
+            
+         
     }
     
      
@@ -182,6 +207,12 @@ public class WorldScreen implements Screen {
         g.fillRect(0, 0, v.getTileSize()*v.getWidthInTiles(), v.getTileSize()*2);
         g.setColor(Color.black);
         g.drawRect(0, 0, v.getTileSize()*v.getWidthInTiles(), v.getTileSize()*2);
+        
+        
+        /*
+         * draw the menu only during a player turn
+         */
+        if(this.currentGroup==0) {
         g.drawString(this.playerGroup.getCurrentSelected().menuDisplay(), 0, 20);
         
         /*
@@ -197,8 +228,13 @@ public class WorldScreen implements Screen {
         g.translate(v.getTileSize()*3, v.getTileSize());
         playerGroup.getCurrentSelected().drawSkillMenu(g, v);
         g.translate(-v.getTileSize()*3, -v.getTileSize());
+        }
+        else {
+            g.drawString("ENEMY ACTIVITY", v.getTileSize(), v.getTileSize()/2);
+        }
         g.translate(0, -v.getTileSize()*(v.getHeightInTiles()-bh));
     }
+  
     /*
      * Draws the cursor, tooltips and such items
      */
@@ -242,7 +278,21 @@ public class WorldScreen implements Screen {
      */
     @Override
     public void update() {
-      //  throw new UnsupportedOperationException("Not supported yet.");
+       if(currentGroup==0) return;
+       
+       if(enemyGroup.getCurrentSelected().getActionPoints()!=0) {
+          
+           enemyGroup.getCurrentSelected()
+                   .think(this);
+       }  
+       else {
+       enemyGroup.prevnextUnit(1);
+       
+       if(enemyGroup.getCurrent()==0) {
+             currentGroup=0;
+              playerGroup.update(this); 
+       } 
+       }
     }
     
     /**
@@ -315,6 +365,62 @@ public class WorldScreen implements Screen {
      */
     public void setEnemyGroup(UnitGroup enemyGroup) {
         this.enemyGroup = enemyGroup;
+    }
+
+    /**
+     * @return the currentGroup
+     */
+    public int getCurrentGroup() {
+        return currentGroup;
+    }
+
+    /**
+     * @param currentGroup the currentGroup to set
+     */
+    public void setCurrentGroup(int currentGroup) {
+        this.currentGroup = currentGroup;
+    }
+
+    /**
+     * @return the topMenuHeight
+     */
+    public int getTopMenuHeight() {
+        return topMenuHeight;
+    }
+
+    /**
+     * @param topMenuHeight the topMenuHeight to set
+     */
+    public void setTopMenuHeight(int topMenuHeight) {
+        this.topMenuHeight = topMenuHeight;
+    }
+
+    /**
+     * @return the leftMenuWidth
+     */
+    public int getLeftMenuWidth() {
+        return leftMenuWidth;
+    }
+
+    /**
+     * @param leftMenuWidth the leftMenuWidth to set
+     */
+    public void setLeftMenuWidth(int leftMenuWidth) {
+        this.leftMenuWidth = leftMenuWidth;
+    }
+
+    /**
+     * @return the rightMenuWidth
+     */
+    public int getRightMenuWidth() {
+        return rightMenuWidth;
+    }
+
+    /**
+     * @param rightMenuWidth the rightMenuWidth to set
+     */
+    public void setRightMenuWidth(int rightMenuWidth) {
+        this.rightMenuWidth = rightMenuWidth;
     }
 
 }

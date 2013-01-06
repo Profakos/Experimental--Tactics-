@@ -31,10 +31,12 @@ public class UnitGroup {
    // units.add(new TagteamUnit("alpha", "sound", false, "clean", false, 0, 0));
    // units.add(new TagteamUnit("beta", "tech", true, "water", true, 0, 1));
     units.put("gamma", new TagteamUnit("gamma","blood", false, "ghost", true, 0, 2, teamNumber));
-    units.put("carp", new SimpleUnit("carp", 0, 1, teamNumber));
+    units.put("carp", new SimpleUnit("carp", "carp", 0, 1, teamNumber));
     }
     else {
         units.put("target", new TargetUnit("target", 5, 5, teamNumber));
+        units.put("slicebeast", new SimpleUnit("slicebeast", "slicebeast", 5, 6, teamNumber));
+        units.put("slicebeastB", new SimpleUnit("slicebeastB", "slicebeast", 6, 6, teamNumber));
         }
     
     names = new ArrayList<>();
@@ -56,10 +58,6 @@ public class UnitGroup {
      * draws the units in the group
      */
     void draw(Graphics g, Viewport v) {
-        
-         g.drawImage(ImageRegistry.getImage("selectedChar"), 
-                 (getCurrentSelected().getLocationX()-v.getOffX())*v.getTileSize(),
-                 (getCurrentSelected().getLocationY()-v.getOffY())*v.getTileSize(), null);
          
         
         for(int index = 0; index<getNames().size(); index++) {
@@ -90,7 +88,13 @@ public class UnitGroup {
     {
     for(int ii = 0; ii<this.getUnits().size(); ii++) {
             getUnits().get(names.get(ii)).update(w);
-        } 
+           
+    }
+    
+     
+    
+     
+    
     }
 
  /*

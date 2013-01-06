@@ -15,7 +15,7 @@ public class TargetUnit extends Unit {
    
         TargetUnit(String name, int y, int x, int teamNumber)
     {
-    super(name, y, x, teamNumber); 
+    super(name, "target", y, x, teamNumber); 
     
    // this.getSkillList().add(new Skill("Deadsplode"));
     this.getSkillList().add(SkillFactory.makeSkill("Respawn"));
@@ -51,8 +51,13 @@ public class TargetUnit extends Unit {
          setLocationX(x); 
         
         w.getTmap().getTile( getLocationY(), getLocationX()).setOccupiedPerson(true, getName());
+        
+        this.setActionPoints(this.getActionPoints()-1);
      }
 
-    
+    @Override
+    public void think(WorldScreen w) {
+       this.setActionPoints(0); 
+    }
     
 }

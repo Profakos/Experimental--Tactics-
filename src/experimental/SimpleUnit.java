@@ -10,8 +10,8 @@ package experimental;
  */
 public class SimpleUnit extends Unit{
     
-    SimpleUnit(String name, int ly, int lx, int teamNumber) {
-    super(name, ly, lx, teamNumber);
+    SimpleUnit(String name, String image, int ly, int lx, int teamNumber) {
+    super(name, image, ly, lx, teamNumber);
     
     /*
     Skill temp = SkillFactory.makeSkill("RandomPort");

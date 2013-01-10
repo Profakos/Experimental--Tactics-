@@ -7,6 +7,7 @@ skillType	simple
 image	CHANGE_Icon
 callfunction	transformToAlternate
 cooldown	0
+instantCast	true
 NEWSKILL	Respawn
 skillType	simple
 callfunction	respawn
@@ -32,6 +33,7 @@ NEWSKILL	Revenge
 skillType	simple
 damage	1
 radius	1
+range	9
 affectCaster	false
 NEWSKILL	Recall
 skillType	simple
@@ -39,6 +41,7 @@ callfunction	refreshSkills
 NEWSKILL	Ignition
 skillType	simple
 silence	3
-doubleDamageTime	3
+damageBoostTime	3
+damageBoost	2
 affectEnemies	false
 affectAllies	false

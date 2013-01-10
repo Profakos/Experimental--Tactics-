@@ -70,28 +70,22 @@ public class WorldScreen implements Screen {
   * 
   */
     @Override
-    public void screenClick(Viewport v) {
+    public void screenClick(Viewport v, int button) {
          if(v.getCx()!=-1 && v.getCy()!=-1 ) {
           try {
           int cy = v.getCy()/v.getTileSize();  
           int cx = v.getCx()/v.getTileSize();
-          
-          /*
-          if(currentGroup==1)   {
-              currentGroup=0;
-              playerGroup.update(this);
-              return;
-          }*/
+           
           /*
            * if(clicked on playfield)
            * 
            * else clicked on menu
            */
           if(cy<v.getHeightInTiles()-v.getBottomMenuHeight()) {
-             clickPlayfield(cy, cx, v);
+             clickPlayfield(cy, cx, v, button);
           }
           else { 
-             clickMenu(cy, cx, v);
+             clickMenu(cy, cx, v, button);
           }
           v.centerOn(playerGroup.getCurrentSelected().getLocationY(), playerGroup.getCurrentSelected().getLocationX());
           }catch(NullPointerException e){}
@@ -102,10 +96,29 @@ public class WorldScreen implements Screen {
     /*
      * Clicked on the playingField half
      */
-     private void clickPlayfield(int cy, int cx, Viewport v) {
-         
-          if(playerGroup.getCurrentSelected().getActionPoints()==0) 
+     private void clickPlayfield(int cy, int cx, Viewport v, int button) {
+        
+         if(playerGroup.getCurrentSelected().getActionPoints()==0) 
               return;
+          
+         if(button==3) {
+             int usingSkill = playerGroup.getCurrentSelected().getUsingSkill();
+             
+             if(usingSkill==-1) return; 
+             
+             playerGroup.getCurrentSelected().setTargetingY(cy + v.getOffY());
+             playerGroup.getCurrentSelected().setTargetingX(cx + v.getOffX());
+             
+             if(!playerGroup.getCurrentSelected().getSkill(usingSkill)
+                     .canHit(playerGroup.getCurrentSelected(), this)) return;
+             
+             playerGroup.getCurrentSelected().useSkill(playerGroup.getCurrentSelected().getUsingSkill(), this); 
+             return;
+         }
+         
+         playerGroup.getCurrentSelected().setUsingSkill(-1);
+         
+         
          
           if(!tmap.getTile(cy + v.getOffY(), cx + v.getOffX()).isOccupied()) {
                 playerGroup.moveUnit(cy + v.getOffY(), cx + v.getOffX(), this);
@@ -125,7 +138,7 @@ public class WorldScreen implements Screen {
      /*
       * Clicked on the Menu
       */
-    private void clickMenu(int cy, int cx, Viewport v) {
+    private void clickMenu(int cy, int cx, Viewport v, int button) {
       if(cy==v.getHeightInTiles()-1)
        switch(cx){
                 case (0): playerGroup.prevnextUnit(-1);
@@ -137,7 +150,9 @@ public class WorldScreen implements Screen {
                     break;
                 default: 
                     if(cx>=3) { 
-                        playerGroup.getCurrentSelected().useSkill(cx-3, this); 
+                        if(playerGroup.getCurrentSelected().getSkill(cx-3).isInstantCast())
+                            playerGroup.getCurrentSelected().useSkill(cx-3, this);
+                        playerGroup.getCurrentSelected().setUsingSkill(cx-3); 
                     }
                     break;
                 }
@@ -159,7 +174,7 @@ public class WorldScreen implements Screen {
         
          if(getPlayerGroup().getCurrentSelected().getActionPoints()!=0) {
              /*
-              * TODO: Collapse these two into a single for cycle
+              * TODO: Collapse these two into a single for cycle, possibly
               */
             int dist =  getPlayerGroup().getCurrentSelected().getCurrentTileSpeed();
             for(int ii = -dist; ii<dist+1; ii++) {

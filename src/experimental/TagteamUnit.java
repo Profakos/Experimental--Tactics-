@@ -61,6 +61,15 @@ public class TagteamUnit extends Unit{
      
      }
        
+       
+    @Override
+       Skill getSkill(int index) {
+       
+        if(index<this.getSkillList().size()) return this.getSkillList().get(index);
+        
+        return  characters[(currentDominant+1)%2].getSkillList().get(index-this.getSkillList().size());
+              
+      }
       /*
       * Uses a skill
       */

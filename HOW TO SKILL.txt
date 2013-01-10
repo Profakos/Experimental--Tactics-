@@ -4,8 +4,9 @@ image	imagename  // default ""
 callfunction	(transformToAlternate | randomPort | refreshSkills)
 proc (ondeath)  
 cooldown int //default 3
-
-
+range int//how far will it shoot? -1: infinity, 0: selfcentered only, 1+: numerical range 
+//default 0
+instantCast bool // fires when you click the icon
 
 CompositeSkill only
 
@@ -19,4 +20,5 @@ affectAllies boolean //deafault false
 affectEnemies boolean//default true
 damage int //default: 0
 silence int 
-doubleDamageTime int
+damageBoostTime	int
+damageBoost	int

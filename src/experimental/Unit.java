@@ -36,7 +36,13 @@ public abstract class Unit {
     private List<Skill> skillList;
     
     private int silenceTimeLeft = 0;
-    private int doubledamageTimeLeft = 0;
+    private int damageBoostTimeLeft = 0;
+    private int damageBoost = 0;
+    
+    
+    private int usingSkill = -1; //the skill you are using at the moment
+    private int targetingX = -1;
+    private int targetingY = -1;
     
     Unit(String name, String image, int lY, int lX, int teamNumber)
     {
@@ -92,6 +98,14 @@ public abstract class Unit {
         }
      
      }
+     
+     /*
+      * Get Skill
+      */
+      Skill getSkill(int ii) {
+          return this.getSkillList().get(ii);
+      }
+     
      
     /*
      * A string for the menu to display when selected
@@ -163,7 +177,7 @@ public abstract class Unit {
      boolean canHit(Unit target, WorldScreen aThis) {
          
       int dist = this.getCurrentRange();
-      if(Math.abs(this.getLocationX()-target.getLocationX())<=dist && 
+      if(Math.abs(this.getLocationX()-target.getLocationX()) + 
        Math.abs(this.getLocationY()-target.getLocationY())<=dist) 
           return true;
       
@@ -206,8 +220,10 @@ public abstract class Unit {
     if(this.getSilenceTimeLeft()>0)
     this.setSilenceTimeLeft(this.getSilenceTimeLeft()-1);
     
-    if(this.getDoubledamageTimeLeft()>0)
-    this.setDoubledamageTimeLeft(this.getDoubledamageTimeLeft()-1);
+    if(this.getDamageBoostTimeLeft()>0) {
+    this.setDamageBoostTimeLeft(this.getDamageBoostTimeLeft()-1);
+    if(this.getDamageBoostTimeLeft()==0) this.setDamageBoost(0);
+    }
     }
     
     void updateSkills() {
@@ -434,11 +450,8 @@ public abstract class Unit {
          if(canHit(target, w)) {  
              
                          setActionPoints(0);
-                         
-                         if(this.doubledamageTimeLeft==0)
-                         target.modifyHealth(-1);
-                         else
-                         target.modifyHealth(-2);
+                          
+                         target.modifyHealth(-1 + getDamageBoost()); 
                          
                          
                         if(target.getCurrentHealth()<=0) 
@@ -484,23 +497,81 @@ public abstract class Unit {
         this.silenceTimeLeft = silenceTimeLeft;
     }
 
-    /**
-     * @return the doubledamageTimeLeft
-     */
-    public int getDoubledamageTimeLeft() {
-        return doubledamageTimeLeft;
-    }
-
-    /**
-     * @param doubledamageTimeLeft the doubledamageTimeLeft to set
-     */
-    public void setDoubledamageTimeLeft(int doubledamageTimeLeft) {
-        this.doubledamageTimeLeft = doubledamageTimeLeft;
-    }
+  
 
     void think(WorldScreen w) {
        moveCommand(getLocationY()+w.getRgen().nextInt(3)-1, 
                getLocationX()+w.getRgen().nextInt(3)-1, w);
+    }
+
+    /**
+     * @return the damageBoost
+     */
+    public int getDamageBoost() {
+        return damageBoost;
+    }
+
+    /**
+     * @param damageBoost the damageBoost to set
+     */
+    public void setDamageBoost(int damageBoost) {
+        this.damageBoost = damageBoost;
+    }
+
+    /**
+     * @return the damageBoostTimeLeft
+     */
+    public int getDamageBoostTimeLeft() {
+        return damageBoostTimeLeft;
+    }
+
+    /**
+     * @param damageBoostTimeLeft the damageBoostTimeLeft to set
+     */
+    public void setDamageBoostTimeLeft(int damageBoostTimeLeft) {
+        this.damageBoostTimeLeft = damageBoostTimeLeft;
+    }
+
+    /**
+     * @return the usingSkill
+     */
+    public int getUsingSkill() {
+        return usingSkill;
+    }
+
+    /**
+     * @param usingSkill the usingSkill to set
+     */
+    public void setUsingSkill(int usingSkill) {
+        this.usingSkill = usingSkill;
+    }
+
+    /**
+     * @return the targetingX
+     */
+    public int getTargetingX() {
+        return targetingX;
+    }
+
+    /**
+     * @param targetingX the targetingX to set
+     */
+    public void setTargetingX(int targetingX) {
+        this.targetingX = targetingX;
+    }
+
+    /**
+     * @return the targetingY
+     */
+    public int getTargetingY() {
+        return targetingY;
+    }
+
+    /**
+     * @param targetingY the targetingY to set
+     */
+    public void setTargetingY(int targetingY) {
+        this.targetingY = targetingY;
     }
     
 }

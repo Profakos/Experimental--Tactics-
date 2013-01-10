@@ -15,5 +15,5 @@ public interface Screen {
     
     public void update();
     
-    public void screenClick(Viewport v);
+    public void screenClick(Viewport v, int button);
 }

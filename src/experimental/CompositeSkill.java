@@ -37,6 +37,10 @@ public class CompositeSkill extends Skill{
                 break;
             case cooldown: this.setCooldown(Integer.valueOf(sklist.get(ii).getSetting()));
                 break;
+            case range: this.setRange(Integer.valueOf(sklist.get(ii).getSetting()));
+                break;
+            case instantCast: this.setInstantCast(Boolean.valueOf(sklist.get(ii).getSetting()));
+            break;
             default: break;
             }
         }

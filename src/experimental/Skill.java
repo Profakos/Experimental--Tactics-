@@ -20,6 +20,10 @@ abstract public class Skill {
     private int cooldown = 3;
     private int cooldownTimeLeft = 0;
     
+    private int range = 0;
+    private boolean instantCast = false;
+    
+    
     Skill(String name)    {
         this.name = name;
         this.image = "";
@@ -127,6 +131,42 @@ abstract public class Skill {
             g.setColor(Color.blue);
             g.drawString(this.getCooldownTimeLeft()+".00", v.getTileSize()*ii, v.getTileSize()/2);
         }
+    }
+
+    /**
+     * @return the range
+     */
+    public int getRange() {
+        return range;
+    }
+
+    /**
+     * @param range the range to set
+     */
+    public void setRange(int range) {
+        this.range = range;
+    }
+
+    boolean canHit(Unit user, WorldScreen w) {
+        if(this.range == -1) return true;
+        
+        int targ =  Math.abs(user.getLocationX()-user.getTargetingX()) + 
+          Math.abs(user.getLocationY()-user.getTargetingY());
+        return targ<=this.range;
+      }
+
+    /**
+     * @return the instantFire
+     */
+    public boolean isInstantCast() {
+        return instantCast;
+    }
+
+    /**
+     * @param instantCast the instantFire to set
+     */
+    public void setInstantCast(boolean instantCast) {
+        this.instantCast = instantCast;
     }
     
      

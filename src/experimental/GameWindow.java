@@ -132,7 +132,7 @@ class GameWindow extends Frame {
                 getCanvas().setCurx(-1);
                 getCanvas().setCury(-1);
                     }
-            world.screenClick(canvas.getV());
+            world.screenClick(canvas.getV(), e.getButton());
            
             }        
     }

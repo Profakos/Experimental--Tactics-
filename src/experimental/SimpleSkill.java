@@ -25,7 +25,8 @@ public class SimpleSkill extends Skill{
     private boolean affectEnemies = true;
     
     private int silence = 0;
-    private int doubleDamageTime = 0;
+    private int damageBoostTime = 0;
+    private int damageBoost = 0;
       
     /*
      * Constructor
@@ -46,12 +47,20 @@ public class SimpleSkill extends Skill{
         for(int ii = 0; ii<sklist.size(); ii++)
         {
         switch(sklist.get(ii).getSettingType()){
-            case callfunction : calledFunctionEnum = UnitFunctionEnum.valueOf(sklist.get(ii).getSetting());
-                break;
+          
             case image: setImage(sklist.get(ii).getSetting());
                 break;
             case proc: setProc(SkillProcEnum.valueOf(sklist.get(ii).getSetting()));
                 break;
+            case cooldown: this.setCooldown(Integer.valueOf(sklist.get(ii).getSetting()));
+                break;
+            case range: this.setRange(Integer.valueOf(sklist.get(ii).getSetting()));
+                break;
+            case instantCast: this.setInstantCast(Boolean.valueOf(sklist.get(ii).getSetting()));
+                break;
+                
+            case callfunction : calledFunctionEnum = UnitFunctionEnum.valueOf(sklist.get(ii).getSetting());
+                break;    
             case damage: damage = Integer.valueOf(sklist.get(ii).getSetting());
                 break;
             case radius: radius = Integer.valueOf(sklist.get(ii).getSetting());
@@ -62,12 +71,12 @@ public class SimpleSkill extends Skill{
                 break;
             case affectEnemies: affectEnemies = Boolean.valueOf(sklist.get(ii).getSetting());
                 break;
-            case cooldown: this.setCooldown(Integer.valueOf(sklist.get(ii).getSetting()));
-                break;
             case silence: silence = Integer.valueOf(sklist.get(ii).getSetting());
                 break;
-            case doubleDamageTime: doubleDamageTime = Integer.valueOf(sklist.get(ii).getSetting());
+            case damageBoostTime: damageBoostTime = Integer.valueOf(sklist.get(ii).getSetting());
                 break;
+            case damageBoost: damageBoost = Integer.valueOf(sklist.get(ii).getSetting());
+                break;  
             default: break;
             }
         }
@@ -94,15 +103,21 @@ public class SimpleSkill extends Skill{
         } 
         
         String tempname;
+        
+        /*
+         * Skill's epicenter
+         */
+        int centY = user.getTargetingY();
+        int centX = user.getTargetingX();
+        
         for(int ii = 0-this.radius; ii<=this.radius; ii++) {
             for(int jj = 0-this.radius; jj<=this.radius; jj++) {
             
-                if(ii+user.getLocationX()<0 || jj+user.getLocationY()<0 || 
-                        ii+user.getLocationX()>=w.getTmap().getWidthInTiles() ||
-                        jj+user.getLocationY()>=w.getTmap().getHeightInTiles()) continue;
+                if(ii+centX<0 || jj+centY<0 || ii+centX>=w.getTmap().getWidthInTiles() 
+                        ||  jj+centY>=w.getTmap().getHeightInTiles()) continue;
               
                 
-             tempname = w.getTmap().getTile(jj+user.getLocationY(), ii+user.getLocationX())
+             tempname = w.getTmap().getTile(jj+centY, ii+centX)
                         .getOccupName();
              if(tempname.equals("")) continue;
              
@@ -141,8 +156,16 @@ public class SimpleSkill extends Skill{
      * affects a creature
      */
     void    affectUnit(Unit u, WorldScreen w)  {
+             if(u.getSilenceTimeLeft()>this.getSilence())
              u.setSilenceTimeLeft(this.getSilence());
-             u.setDoubledamageTimeLeft(this.getDoubleDamageTime());
+             
+             
+             if(u.getDamageBoostTimeLeft()>this.getDamageBoostTime())
+             u.setDamageBoostTimeLeft(this.getDamageBoostTime());
+             
+             if(u.getDamageBoost()>this.getDamageBoost())
+             u.setDamageBoost(this.getDamageBoost());
+             
              u.modifyHealth(-damage);
              if(u.getCurrentHealth()<=0) 
                  u.procSkill(w, SkillProcEnum.onDeath);
@@ -219,17 +242,31 @@ public class SimpleSkill extends Skill{
     }
 
     /**
-     * @return the doubleDamageTime
+     * @return the damageBoostTime
      */
-    public int getDoubleDamageTime() {
-        return doubleDamageTime;
+    public int getDamageBoostTime() {
+        return damageBoostTime;
     }
 
     /**
-     * @param doubleDamageTime the doubleDamageTime to set
+     * @param damageBoostTime the damageBoostTime to set
      */
-    public void setDoubleDamageTime(int doubleDamageTime) {
-        this.doubleDamageTime = doubleDamageTime;
+    public void setDamageBoostTime(int damageBoostTime) {
+        this.damageBoostTime = damageBoostTime;
+    }
+
+    /**
+     * @return the damageBoost
+     */
+    public int getDamageBoost() {
+        return damageBoost;
+    }
+
+    /**
+     * @param damageBoost the damageBoost to set
+     */
+    public void setDamageBoost(int damageBoost) {
+        this.damageBoost = damageBoost;
     }
     
      

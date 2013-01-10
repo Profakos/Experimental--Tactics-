@@ -21,5 +21,8 @@ public enum SkillSettingEnum {
     componentSkill,
     cooldown,
     silence,
-    doubleDamageTime
+    damageBoostTime,
+    damageBoost,
+    range,
+    instantCast
 }

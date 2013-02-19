@@ -18,7 +18,7 @@ public enum SkillSettingEnum {
     affectAllies,
     affectEnemies,
     skillType,
-    componentSkill,
+ //   componentSkill,
     cooldown,
     silence,
     damageBoostTime,

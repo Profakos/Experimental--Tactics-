@@ -101,8 +101,9 @@ public class WorldScreen implements Screen {
          if(playerGroup.getCurrentSelected().getActionPoints()==0) 
               return;
           
-         if(button==3) {
              int usingSkill = playerGroup.getCurrentSelected().getUsingSkill();
+             
+         if(button==3) {
              
              if(usingSkill==-1) return; 
              
@@ -120,7 +121,7 @@ public class WorldScreen implements Screen {
          
          
          
-          if(!tmap.getTile(cy + v.getOffY(), cx + v.getOffX()).isOccupied()) {
+          if(!tmap.getTile(cy + v.getOffY(), cx + v.getOffX()).isOccupied() && usingSkill==-1) {
                 playerGroup.moveUnit(cy + v.getOffY(), cx + v.getOffX(), this);
               }
           else {
@@ -173,10 +174,14 @@ public class WorldScreen implements Screen {
         int cury = getPlayerGroup().getCurrentSelected().getLocationY();
         
          if(getPlayerGroup().getCurrentSelected().getActionPoints()!=0) {
+          
+           
+             int usingSkill = playerGroup.getCurrentSelected().getUsingSkill();  
              /*
-              * TODO: Collapse these two into a single for cycle, possibly
+              * This far can you walk
               */
             int dist =  getPlayerGroup().getCurrentSelected().getCurrentTileSpeed();
+            if(usingSkill==-1) //if no skill is selected
             for(int ii = -dist; ii<dist+1; ii++) {
                 for(int jj = -dist; jj<dist+1; jj++) { 
              if(Math.abs(jj)+Math.abs(ii)>dist) continue;   
@@ -185,8 +190,14 @@ public class WorldScreen implements Screen {
                     }
                 }
             
-            
+            /*
+             * This far can you shoot
+             */
+            if(usingSkill==-1)
               dist =  getPlayerGroup().getCurrentSelected().getCurrentRange();
+            else
+              dist = getPlayerGroup().getCurrentSelected()
+                      .getSkill(usingSkill).getRange();
             for(int ii = -dist; ii<dist+1; ii++) {
                 for(int jj = -dist; jj<dist+1; jj++) { 
              if(Math.abs(jj)+Math.abs(ii)!=dist) continue;   

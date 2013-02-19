@@ -10,9 +10,9 @@ import java.awt.Graphics;
  *
  * @author Akos
  */
+@Deprecated
 public class TargetUnit extends Unit {
 
-   
         TargetUnit(String name, int y, int x, int teamNumber)
     {
     super(name, "target", y, x, teamNumber); 

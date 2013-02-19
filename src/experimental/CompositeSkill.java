@@ -11,6 +11,7 @@ import java.util.List;
  *
  * @author Akos
  */
+@Deprecated
 public class CompositeSkill extends Skill{
 
     private String name;
@@ -33,8 +34,8 @@ public class CompositeSkill extends Skill{
                 break;
             case proc: setProc(SkillProcEnum.valueOf(sklist.get(ii).getSetting()));
                 break;
-            case componentSkill: componentSkills.add(new SimpleSkill(sklist.get(ii).getSetting()));
-                break;
+   //         case componentSkill: componentSkills.add(new SimpleSkill(sklist.get(ii).getSetting()));
+  //              break;
             case cooldown: this.setCooldown(Integer.valueOf(sklist.get(ii).getSetting()));
                 break;
             case range: this.setRange(Integer.valueOf(sklist.get(ii).getSetting()));
